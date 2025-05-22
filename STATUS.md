@@ -10,4 +10,4 @@ No idea where to pick up. Going to scan the book and pray.
 
 ### 5:45PM
 
-Found it. Resume at `Chapter 4.6.1 String Literals`.
+Found it. Resume at `Chapter 4.6.1 String - Literals`.

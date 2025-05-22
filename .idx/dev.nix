@@ -6,6 +6,9 @@
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
     python313
+    fzf
+    fd
+    ripgrep
   ];
   # Sets environment variables in the workspace
   env = {};
