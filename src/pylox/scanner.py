@@ -9,14 +9,14 @@ class Scanner:
         self.current: int = 0
         self.line: int = 1
     
-    def scan_tokens() -> None:
+    def scan_tokens(self) -> None:
         while not is_at_end:
             self.start = self.current
             self.scan_token()
         
         self.tokens.append(Token(TokenType.EOF, "", None, self.line))
     
-    def scan_token() -> None:
+    def scan_token(self) -> None:
         c = self.advance()
         match c:
             case '(': add_token(TokenType.LEFT_PAREN)
@@ -44,26 +44,50 @@ class Scanner:
                 pass
             case '\n':
                 self.line += 1
-            case _: Pylox.error(self.line, "Unexpected character.")
+            case '"':
+                self.string()
+            case _: 
+                if c.isdigit():
+                    self.number()
+                else:
+                    Pylox.error(self.line, "Unexpected character.")
     
-    def match(expected: str) -> bool:
+    def match(self, expected: str) -> bool:
         if (self.is_at_end()): return False
         if (self.source(self.current) != expected): return false
         self.current += 1
         return True
     
-    def peek() -> None:
+    def peek(self) -> None:
         if self.is_at_end():
             return '\0'
         return self.source[self.current]
     
-    def is_at_end() -> bool:
+    def is_at_end(self) -> bool:
         return current >= len(self.source)
     
-    def advance() -> None:
+    def advance(self) -> None:
         self.current += 1
         return self.source[self.current]
     
-    def add_token(ttype: TokenType, literal: object = None) -> None:
+    def add_token(self, ttype: TokenType, literal: object = None) -> None:
         text: str = self.source[self.start, self.current]
         self.tokens.append(Token(ttype, text, literal, self.line))
+    
+    def string(self) -> None:
+        while (self.peek() != '"' and not self.is_at_end()):
+            if (self.peek() == '\n'):
+                self.line += 1
+            self.advance()
+        
+        if self.is_at_end():
+            Pylox.error(self.line, "Unterminated string.")
+            return
+        
+        self.advance()
+
+        value = self.source[self.start + 1: self.current - 1]
+        self.add_token(TokenType.STRING, value)
+    
+    def number(self) -> None:
+        pass

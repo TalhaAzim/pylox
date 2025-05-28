@@ -11,3 +11,9 @@ No idea where to pick up. Going to scan the book and pray.
 ### 5:45PM
 
 Found it. Resume at `Chapter 4.6.1 String - Literals`.
+
+## May 27
+
+### 8:00PM
+
+Implemented string literals, continue at 'Chapter 4.6.2 Number Literals'.
