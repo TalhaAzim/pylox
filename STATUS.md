@@ -17,3 +17,9 @@ Found it. Resume at `Chapter 4.6.1 String - Literals`.
 ### 8:00PM
 
 Implemented string literals, continue at 'Chapter 4.6.2 Number Literals'.
+
+## August 15, 2025
+
+### 21:54 
+
+Implemented number literals. Continue at 'Chapter 4.7 Reserved Words and Identifiers'

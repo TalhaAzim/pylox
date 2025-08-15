@@ -19,27 +19,27 @@ class Scanner:
     def scan_token(self) -> None:
         c = self.advance()
         match c:
-            case '(': add_token(TokenType.LEFT_PAREN)
-            case ')': add_token(TokenType.RIGHT_PAREN)
-            case '{': add_token(TokenType.LEFT_BRACE)
-            case '}': add_token(TokenType.RIGHT_BRACE)
-            case ',': add_token(TokenType.LEFT_PAREN)
-            case '.': add_token(TokenType.RIGHT_PAREN)
-            case '-': add_token(TokenType.LEFT_BRACE)
-            case '+': add_token(TokenType.RIGHT_BRACE)
-            case ';': add_token(TokenType.LEFT_BRACE)
-            case '*': add_token(TokenType.RIGHT_BRACE)
-            case '!': add_token(TokenType.BANG_EQUAL if match('=')  else TokenType.BANG)
-            case '=': add_token(TokenType.EQUAL_EQUAL if match('=')  else TokenType.EQUAL)
-            case '<': add_token(TokenType.LESS_EQUAL if match('=')  else TokenType.LESS)
-            case '>': add_token(TokenType.GREATER_EQUAL if match('=')  else TokenType.GREATER)
+            case '(': self.add_token(TokenType.LEFT_PAREN)
+            case ')': self.add_token(TokenType.RIGHT_PAREN)
+            case '{': self.add_token(TokenType.LEFT_BRACE)
+            case '}': self.add_token(TokenType.RIGHT_BRACE)
+            case ',': self.add_token(TokenType.LEFT_PAREN)
+            case '.': self.add_token(TokenType.RIGHT_PAREN)
+            case '-': self.add_token(TokenType.LEFT_BRACE)
+            case '+': self.add_token(TokenType.RIGHT_BRACE)
+            case ';': self.add_token(TokenType.LEFT_BRACE)
+            case '*': self.add_token(TokenType.RIGHT_BRACE)
+            case '!': self.add_token(TokenType.BANG_EQUAL if match('=')  else TokenType.BANG)
+            case '=': self.add_token(TokenType.EQUAL_EQUAL if match('=')  else TokenType.EQUAL)
+            case '<': self.add_token(TokenType.LESS_EQUAL if match('=')  else TokenType.LESS)
+            case '>': self.add_token(TokenType.GREATER_EQUAL if match('=')  else TokenType.GREATER)
             case '/':
                 if match('/'):
                     while True:
                         if (peek() != '\n' and not self.is_at_end()):
                             self.advance()
                         else:
-                            addToken(TokenType.SLASH)
+                            self.add_token(TokenType.SLASH)
             case ' ' | '\r' | 't':
                 pass
             case '\n':
@@ -58,10 +58,15 @@ class Scanner:
         self.current += 1
         return True
     
-    def peek(self) -> None:
+    def peek(self) -> str:
         if self.is_at_end():
             return '\0'
         return self.source[self.current]
+    
+    def peek_next(self) -> str:
+        if (self.current + 1 >= len(self.source)):
+            return '\0';
+        return self.source[self.current + 1]
     
     def is_at_end(self) -> bool:
         return current >= len(self.source)
@@ -90,4 +95,22 @@ class Scanner:
         self.add_token(TokenType.STRING, value)
     
     def number(self) -> None:
-        pass
+        
+        while True:
+            if self.peek().isdigit():
+                self.advance()
+            else:
+                break
+        
+        if self.peek() == '.' and self.peek_next().is_digit():
+            advance()
+
+        while True:
+            if self.peek().isdigit():
+                self.advance()
+            else:
+                break
+
+        value = float(self.source[self.start:self.current])
+        self.add_token(TokenType.NUM, value)
+            
