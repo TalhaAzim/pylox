@@ -23,3 +23,9 @@ Implemented string literals, continue at 'Chapter 4.6.2 Number Literals'.
 ### 21:54 
 
 Implemented number literals. Continue at 'Chapter 4.7 Reserved Words and Identifiers'
+
+## August 16, 2025
+
+### 15:37
+
+Completed implementation of Scanner. Continue at "Chaoter 5 Representing Code"
