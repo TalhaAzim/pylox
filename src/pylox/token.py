@@ -23,7 +23,7 @@ EOF
 
 TOKENS = [ token.strip() for token in "".join(line for line in tokens_desc.split('\n') if not line.startswith("//")).split(",") ]
 
-TokenType = Enum("TokenType", *TOKENS)
+TokenType = Enum("TokenType", TOKENS)
 
 class Token:
 
@@ -31,4 +31,4 @@ class Token:
         self.tokentype, self.lexeme, self.literal, self.line = ttype, lexeme, literal, line
 
     def __str__(self) -> str:
-        return f"{self.ttype} {self.lexeme} {self.literal}"
+        return f"{self.tokentype} {self.lexeme} {self.literal}"

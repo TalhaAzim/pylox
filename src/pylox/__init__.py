@@ -36,6 +36,8 @@ class Pylox:
 
     @staticmethod
     def run(source: str) -> None:
+        # Importing scanner here to avoid circular import
+        from scanner import Scanner
         scanner = Scanner(source)
         tokens = scanner.scan_tokens()
         
