@@ -13,7 +13,8 @@ class Scanner:
         "if": TokenType.IF,
         "nil": TokenType.NIL,
         "or": TokenType.OR,
-        "print": TokenType.RETURN,
+        "print": TokenType.PRINT,
+        "return": TokenType.RETURN,
         "super": TokenType.SUPER,
         "this": TokenType.THIS,
         "true": TokenType.TRUE,
@@ -55,12 +56,11 @@ class Scanner:
             case '>': self.add_token(TokenType.GREATER_EQUAL if self.match('=')  else TokenType.GREATER)
             case '/':
                 if self.match('/'):
-                    while True:
-                        if (self.peek() != '\n' and not self.is_at_end()):
+                    while (self.peek() != '\n' and not self.is_at_end()):
                             self.advance()
-                        else:
-                            self.add_token(TokenType.SLASH)
-            case ' ' | '\r' | 't':
+                else:
+                    self.add_token(TokenType.SLASH)
+            case ' ' | '\r' | '\t':
                 pass
             case '\n':
                 self.line += 1
@@ -107,7 +107,7 @@ class Scanner:
     def is_at_end(self) -> bool:
         return self.current >= len(self.source)
     
-    def advance(self) -> None:
+    def advance(self) -> str:
         c = self.source[self.current]
         self.current += 1
         return c
