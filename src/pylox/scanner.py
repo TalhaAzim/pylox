@@ -133,20 +133,14 @@ class Scanner:
     
     def number(self) -> None:
         
-        while True:
-            if self.peek().isdigit():
-                self.advance()
-            else:
-                break
+        while self.peek().isdigit():
+            self.advance()
         
         if self.peek() == '.' and self.peek_next().isdigit():
             self.advance()
 
-        while True:
-            if self.peek().isdigit():
-                self.advance()
-            else:
-                break
+        while self.peek().isdigit():
+            self.advance()
 
         value = float(self.source[self.start:self.current])
         self.add_token(TokenType.NUMBER, value)
