@@ -28,4 +28,10 @@ Implemented number literals. Continue at 'Chapter 4.7 Reserved Words and Identif
 
 ### 15:37
 
-Completed implementation of Scanner. Continue at "Chaoter 5 Representing Code"
+Completed implementation of Scanner. Continue at "Chapter 5 Representing Code"
+
+## August 26, 2025
+
+### 23:44
+
+Completed implementation of Expr generator. Continue at "Chapter 5.3.3 Visitors for expressions"
