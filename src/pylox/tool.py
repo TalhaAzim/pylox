@@ -26,17 +26,33 @@ class GenerateAst():
               "from token import Token",
               "", 
               f"class {basename.capitalize()}(ABC):",
-              "    pass",
               "",
+              "    @abstractmethod",
+              "    def accept(self, visitor: 'Visitor') -> None:",
+              "        raise NotImplementedError",
               ""])
             
             print(src, file=f)
-            
+
             for atype in types:
-                class_name, fields = (each.strip() for each in atype.split("->"))
-                
-                GenerateAst.define_type(f, basename, class_name, fields)
+                class_name, fieldspec = (each.strip() for each in atype.split("->"))
+                GenerateAst.define_type(f, basename, class_name, fieldspec)
+
+            GenerateAst.define_visitor(f, basename, types)
     
+    @staticmethod
+    def define_visitor(writer: object, basename: str, types: list[str]) -> None:
+        print(f"class Visitor(ABC):", file=writer)
+
+        for atype in types:
+            type_name = atype.split("->")[0].strip()
+            print("", file=writer)
+            print(f"    @abstractmethod", file=writer)
+            print(f"    def visit_{type_name.lower()}_{basename.lower()}(self, {basename.lower()}: {type_name}) -> None:", file=writer)
+            print("        raise NotImplementedError", file=writer)
+        
+        print("",file=writer)
+
     @staticmethod
     def define_type(writer: object, basename: str, class_name: str, fieldspec: str) -> None:
         print(f"class {class_name}({basename}):", file=writer)
@@ -44,8 +60,11 @@ class GenerateAst():
         print(f"    def __init__(self, {fieldspec}) -> None:", file=writer)
         
         for field in fieldspec.split(", "):
-            print(f"        this.{field} = {field[:field.index(':')]}", file=writer)
+            print(f"        self.{field} = {field[:field.index(':')]}", file=writer)
         
+        print("", file=writer)
+        print("    def accept(self, visitor: 'Visitor') -> None:", file=writer)
+        print(f"        return visitor.visit_{class_name.lower()}_{basename.lower()}(self)", file=writer)
         print("", file=writer)
 
 if __name__ == '__main__':
