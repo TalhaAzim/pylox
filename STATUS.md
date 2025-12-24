@@ -16,22 +16,28 @@ Found it. Resume at `Chapter 4.6.1 String - Literals`.
 
 ### 8:00PM
 
-Implemented string literals, continue at 'Chapter 4.6.2 Number Literals'.
+Implemented string literals, continue at `Chapter 4.6.2 Number Literals`.
 
 ## August 15, 2025
 
 ### 21:54 
 
-Implemented number literals. Continue at 'Chapter 4.7 Reserved Words and Identifiers'
+Implemented number literals. Continue at `Chapter 4.7 Reserved Words and Identifiers`.
 
 ## August 16, 2025
 
 ### 15:37
 
-Completed implementation of Scanner. Continue at "Chapter 5 Representing Code"
+Completed implementation of Scanner. Continue at `Chapter 5 Representing Code`.
 
 ## August 26, 2025
 
 ### 23:44
 
-Completed implementation of Expr generator. Continue at "Chapter 5.3.3 Visitors for expressions"
+Completed implementation of Expr generator. Continue at `Chapter 5.3.3 Visitors for expressions`.
+
+## December 23, 2025
+
+### 23:57
+
+Completed implementation of Ast Printer. Continue at `Chapter 6 Parsing Expressions`.
