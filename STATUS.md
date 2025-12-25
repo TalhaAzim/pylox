@@ -41,3 +41,9 @@ Completed implementation of Expr generator. Continue at `Chapter 5.3.3 Visitors 
 ### 23:57
 
 Completed implementation of Ast Printer. Continue at `Chapter 6 Parsing Expressions`.
+
+## December 25, 2025
+
+### 01:27
+
+Partially implemented parser up to `term()` method. Continue at `Chapter 6.2.1 The parser class` from the `factor()` method.
