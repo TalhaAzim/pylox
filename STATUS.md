@@ -46,4 +46,16 @@ Completed implementation of Ast Printer. Continue at `Chapter 6 Parsing Expressi
 
 ### 01:27
 
-Partially implemented parser up to `term()` method. Continue at `Chapter 6.2.1 The parser class` from the `factor()` method.
+Partially implemented parser up to `term()` method. Continue at `Chapter 6.2.1 The Parser Class` from the `factor()` method.
+
+## December 27, 2025
+
+### 01:00
+
+Partially implemented parser up to `primary()` method. Continue at `Chapter 6.3 Syntax Errors`.
+
+## January 05, 2026
+
+### 01:22
+
+Partially implemented parser up to `ParseError` class. Continue at `Chapter 6.3.3 Synchronizing a Recursive Descent Parser`

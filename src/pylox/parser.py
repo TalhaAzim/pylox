@@ -1,7 +1,11 @@
 from token import TokenType, Token
 from expr import *
+from __init__ import Pylox
 
 class Parser:
+    
+    class ParseError(Exception):
+        pass
 
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
@@ -102,3 +106,13 @@ class Parser:
             expr: Expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return Grouping(expr)
+
+    def consume(ttype: TokenType, message: str) -> Token:
+        if self.check(ttype):
+            return self.advance()
+        
+        self.error(self.peek(), message)
+    
+    def error(token: Token, message: str) -> Parser.ParseError:
+        Pylox.error(Token, message)
+        return Parser.ParseError

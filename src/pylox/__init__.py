@@ -1,4 +1,5 @@
 import sys
+from token import Token
 
 class Pylox:
 
@@ -45,8 +46,14 @@ class Pylox:
             print(token)
 
     @staticmethod
-    def error(line: int, message: str) -> None:
-        Pylox.report(line, "", message)
+    def error(location: int | Token, message: str) -> None:
+        if isinstance(location, int)
+            Pylox.report(line, "", message)
+        else:
+            if location.tokentype == TokenType.EOF:
+                self.report(location.line, "at end", message)
+            else:
+                self.report(location.line, f" at '{token.lexeme}'", message)
 
     @staticmethod
     def report(line: int, where: str, message: str) -> None:
