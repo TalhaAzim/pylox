@@ -11,7 +11,9 @@
     in {
      devShells.${system}.default = pkgs.mkShell {
        buildInputs = with pkgs; [
-	 python313 
+	 (python313.withPackages (pypkgs: with pypkgs; [
+	   python-lsp-server
+	 ]))
        ];
      }; 
      
