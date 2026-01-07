@@ -113,22 +113,22 @@ class Parser:
         if self.check(ttype):
             return self.advance()
         
-        Parser.error(self.peek(), message)
+        raise Parser.error(self.peek(), message)
     
     @staticmethod
     def error(token: Token, message: str) -> "Parser.ParseError":
         Pylox.error(token, message)
-        return Parser.ParseError
+        return Parser.ParseError()
     
     def synchronize(self) -> None:
         self.advance()
 
         while not self.is_at_end():
 
-            if (self.previous().ttype == TokenType.SEMICOLON):
+            if (self.previous().tokentype == TokenType.SEMICOLON):
                 return None
             
-            match self.peek().ttype:
+            match self.peek().tokentype:
                 case TokenType.CLASS:
                     pass
                 case TokenType.FUN:
