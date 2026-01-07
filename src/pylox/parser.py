@@ -26,7 +26,7 @@ class Parser:
     
     def match(self, *tokentypes: TokenType) -> bool:
 
-        for tokentype in token_types:
+        for tokentype in tokentypes:
             if (self.check(tokentype)):
                 self.advance()
                 return True
@@ -34,7 +34,7 @@ class Parser:
 
     def check(self, tokentype: TokenType) -> bool:
         if self.is_at_end():
-            return false
+            return False
         return self.peek().tokentype == tokentype
 
     def advance(self) -> Token:
@@ -106,13 +106,52 @@ class Parser:
             expr: Expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return Grouping(expr)
+        
+        raise Parser.error(self.peek(), "Expect expression.")
 
-    def consume(ttype: TokenType, message: str) -> Token:
+    def consume(self, ttype: TokenType, message: str) -> Token:
         if self.check(ttype):
             return self.advance()
         
-        self.error(self.peek(), message)
+        Parser.error(self.peek(), message)
     
-    def error(token: Token, message: str) -> Parser.ParseError:
-        Pylox.error(Token, message)
+    @staticmethod
+    def error(token: Token, message: str) -> "Parser.ParseError":
+        Pylox.error(token, message)
         return Parser.ParseError
+    
+    def synchronize(self) -> None:
+        self.advance()
+
+        while not self.is_at_end():
+
+            if (self.previous().ttype == TokenType.SEMICOLON):
+                return None
+            
+            match self.peek().ttype:
+                case TokenType.CLASS:
+                    pass
+                case TokenType.FUN:
+                    pass
+                case TokenType.VAR:
+                    pass
+                case TokenType.FOR:
+                    pass
+                case TokenType.IF:
+                    pass
+                case TokenType.WHILE:
+                    pass
+                case TokenType.PRINT:
+                    pass
+                case TokenType.RETURN:
+                    return None
+                case _:
+                    pass
+                
+            self.advance()
+    
+    def parse(self) -> Expr:
+        try:
+            return self.expression()
+        except Parser.ParseError:
+            return None

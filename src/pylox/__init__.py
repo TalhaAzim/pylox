@@ -1,5 +1,5 @@
 import sys
-from token import Token
+from token import Token, TokenType
 
 class Pylox:
 
@@ -37,23 +37,31 @@ class Pylox:
 
     @staticmethod
     def run(source: str) -> None:
-        # Importing scanner here to avoid circular import
+        # Importing scanner and parser here to avoid circular import
         from scanner import Scanner
-        scanner = Scanner(source)
-        tokens = scanner.scan_tokens()
+        from parser import Parser
+
+        scanner: Scanner = Scanner(source)
+        tokens: list[Token] = scanner.scan_tokens()
+
+        parser: Parser = Parser(tokens)
+        expression = parser.parse()
+
+        if Pylox.had_error:
+            return
         
-        for token in tokens:
-            print(token)
+        from astprinter import AstPrinter
+        print(AstPrinter().print(expression))
 
     @staticmethod
     def error(location: int | Token, message: str) -> None:
-        if isinstance(location, int)
-            Pylox.report(line, "", message)
+        if isinstance(location, int):
+            Pylox.report(location, "", message)
         else:
             if location.tokentype == TokenType.EOF:
-                self.report(location.line, "at end", message)
+                Pylox.report(location.line, " at end", message)
             else:
-                self.report(location.line, f" at '{token.lexeme}'", message)
+                Pylox.report(location.line, f" at '{location.lexeme}'", message)
 
     @staticmethod
     def report(line: int, where: str, message: str) -> None:
