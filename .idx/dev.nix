@@ -2,13 +2,12 @@
 # see: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
+  channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
-    python313
-    fzf
-    fd
-    ripgrep
+    (python313.withPackages (pypkgs: with pypkgs; [
+      python-lsp-server
+    ]))
   ];
   # Sets environment variables in the workspace
   env = {};
@@ -42,8 +41,7 @@
         # Example: install JS dependencies from NPM
         # npm-install = "npm install";
         # Open editors for the following files by default, if they exist:
-        default.openFiles = [ ".idx/dev.nix" "README.md" ];
-        aliasClRepl = "alias cl='rlwrap sbcl'";
+        default.openFiles = [ "STATUS.md" ];
       };
       # Runs when the workspace is (re)started
       onStart = {

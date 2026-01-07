@@ -8,14 +8,11 @@
   outputs = { self, nixpkgs }: let 
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
+    idx = import ./.idx/dev.nix { inherit pkgs };
     in {
      devShells.${system}.default = pkgs.mkShell {
-       buildInputs = with pkgs; [
-	 (python313.withPackages (pypkgs: with pypkgs; [
-	   python-lsp-server
-	 ]))
-       ];
+        packages = with pkgs; [
+        ] ++ idx.packages;
      }; 
-     
   };
 }
