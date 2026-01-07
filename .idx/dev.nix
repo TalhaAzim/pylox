@@ -17,6 +17,7 @@
       "vscodevim.vim"
       "ms-python.debugpy"
       "ms-python.python"
+      "arcticicestudio.nord-visual-studio-code"
     ];
     # Enable previews
     previews = {
