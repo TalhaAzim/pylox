@@ -58,4 +58,10 @@ Partially implemented parser up to `primary()` method. Continue at `Chapter 6.3 
 
 ### 01:22
 
-Partially implemented parser up to `ParseError` class. Continue at `Chapter 6.3.3 Synchronizing a Recursive Descent Parser`
+Partially implemented parser up to `ParseError` class. Continue at `Chapter 6.3.3 Synchronizing a Recursive Descent Parser`.
+
+## January 07, 2026
+
+### 12:50
+
+Completed `Chapter 6 Parsing Expressions`.
