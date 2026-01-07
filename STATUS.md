@@ -65,3 +65,7 @@ Partially implemented parser up to `ParseError` class. Continue at `Chapter 6.3.
 ### 12:50
 
 Completed `Chapter 6 Parsing Expressions`.
+
+## 16:04
+
+Started `Chapter 7 Evaluating Expressions`. Continue at `Chapter 7.2.5 Evaluating Binary Operators`.
