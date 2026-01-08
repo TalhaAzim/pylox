@@ -66,6 +66,12 @@ Partially implemented parser up to `ParseError` class. Continue at `Chapter 6.3.
 
 Completed `Chapter 6 Parsing Expressions`.
 
-## 16:04
+### 16:04
 
 Started `Chapter 7 Evaluating Expressions`. Continue at `Chapter 7.2.5 Evaluating Binary Operators`.
+
+## January 08, 2026
+
+### 17:00
+
+Implemented Interpreter up to interpret() method. Continue at `Chapter 7.4 Hooking Up the Interpreter` from the stringify() method.
