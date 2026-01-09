@@ -15,6 +15,10 @@ class GenerateAst():
             "Literal  -> value: object",
             "Unary    -> operator: Token, right: Expr"
         ])
+        GenerateAst.define_ast(output_dir, "Stmt", [
+            "Expression -> expression: Expr",
+            "Print      -> expression: Expr"
+        ])
     
     @staticmethod
     def define_ast(output_dir: str, basename: str, types: list[str]) -> None:
