@@ -1,9 +1,12 @@
 import sys
+import runtimeerror
 from token import Token, TokenType
 
 class Pylox:
 
     had_error = False
+    had_runtime_error = False
+    interpreter = None
 
     def __init__(self) -> None:
         pass
@@ -25,6 +28,9 @@ class Pylox:
         
         if Pylox.had_error:
             sys.exit(65)
+        
+        if Pylox.had_runtime_error:
+            sys.exit(70)
 
     @staticmethod
     def run_prompt() -> None:
@@ -37,12 +43,14 @@ class Pylox:
 
     @staticmethod
     def run(source: str) -> None:
-        # Importing scanner and parser here to avoid circular import
+        # Importing scanner, parser, and interpreter here to avoid circular import
         from scanner import Scanner
         from parser import Parser
+        from interpreter import Interpreter
 
         scanner: Scanner = Scanner(source)
         tokens: list[Token] = scanner.scan_tokens()
+        Pylox.interpreter = Interpreter()
 
         parser: Parser = Parser(tokens)
         expression = parser.parse()
@@ -50,8 +58,9 @@ class Pylox:
         if Pylox.had_error:
             return
         
-        from astprinter import AstPrinter
-        print(AstPrinter().print(expression))
+        #from astprinter import AstPrinter
+        #print(AstPrinter().print(expression))
+        Pylox.interpreter.interpret(expression)
 
     @staticmethod
     def error(location: int | Token, message: str) -> None:
@@ -62,6 +71,11 @@ class Pylox:
                 Pylox.report(location.line, " at end", message)
             else:
                 Pylox.report(location.line, f" at '{location.lexeme}'", message)
+    
+    @staticmethod
+    def runtime_error(error: runtimeerror.RuntimeError) -> None:
+        print(f"{error.get_message()}\n[line {error.token.line}]")
+        Pylox.had_runtime_error = True
 
     @staticmethod
     def report(line: int, where: str, message: str) -> None:

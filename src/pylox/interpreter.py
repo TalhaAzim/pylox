@@ -78,6 +78,17 @@ class Interpreter(Visitor):
             
             # TODO: verify if the statement below consistently with inteded design
             return a == b
+        
+        def stringify(self, obj: object) -> str:
+            if obj is None:
+                return "null"
+            
+            if isinstance(obj, float):
+                text: str = str(obj)
+                if text.endswith(".0"):
+                    text = text[:-2]
+            
+            return str(obj)
     
         def check_number_operand(self, operator: Token, operand: object) -> None:
             if (isinstance(operand, float)):
@@ -94,4 +105,4 @@ class Interpreter(Visitor):
                 value: object = self.evaluate(expression)
                 print(self.stringify(value))
             except RuntimeError as error:
-                Lox.runtime_error(error)
+                Pylox.runtime_error(error)
