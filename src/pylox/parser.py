@@ -166,8 +166,8 @@ class Parser:
                 
             self.advance()
     
-    def parse(self) -> list[Stmt]:
-        statements: list[Stmt] = []
+    def parse(self) -> list[stmt.Stmt]:
+        statements: list[stmt.Stmt] = []
         while not self.is_at_end():
             statements.append(self.statement())
         return statements
