@@ -1,5 +1,6 @@
 import sys
 import runtimeerror
+import stmt
 from token import Token, TokenType
 
 class Pylox:
@@ -53,14 +54,12 @@ class Pylox:
         Pylox.interpreter = Interpreter()
 
         parser: Parser = Parser(tokens)
-        expression = parser.parse()
+        statements: list[stmt.Stmt] = parser.parse()
 
         if Pylox.had_error:
             return
         
-        #from astprinter import AstPrinter
-        #print(AstPrinter().print(expression))
-        Pylox.interpreter.interpret(expression)
+        Pylox.interpreter.interpret(statements)
 
     @staticmethod
     def error(location: int | Token, message: str) -> None:

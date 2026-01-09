@@ -52,7 +52,7 @@ class GenerateAst():
             type_name = atype.split("->")[0].strip()
             print("", file=writer)
             print(f"    @abstractmethod", file=writer)
-            print(f"    def visit_{type_name.lower()}_{basename.lower()}(self, {basename.lower()}: {type_name}) -> None:", file=writer)
+            print(f"    def visit_{type_name.lower()}_{basename.lower()}(self, {basename.lower()}: '{type_name}') -> None:", file=writer)
             print("        raise NotImplementedError", file=writer)
         
         print("",file=writer)

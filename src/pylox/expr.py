@@ -45,18 +45,18 @@ class Unary(Expr):
 class Visitor(ABC):
 
     @abstractmethod
-    def visit_binary_expr(self, expr: Binary) -> None:
+    def visit_binary_expr(self, expr: 'Binary') -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def visit_grouping_expr(self, expr: Grouping) -> None:
+    def visit_grouping_expr(self, expr: 'Grouping') -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def visit_literal_expr(self, expr: Literal) -> None:
+    def visit_literal_expr(self, expr: 'Literal') -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def visit_unary_expr(self, expr: Unary) -> None:
+    def visit_unary_expr(self, expr: 'Unary') -> None:
         raise NotImplementedError
 

@@ -1,12 +1,25 @@
 import expr
+import stmt
 from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
 
-class Interpreter(expr.Visitor):
+class Interpreter(expr.Visitor, stmt.Visitor):
 
     def evaluate(self, expression: expr.Expr) -> object:
         return expression.accept(self)
+    
+    def execute(self, statement: stmt.Stmt) -> None:
+        statement.accept(self)
+    
+    def visit_expression_stmt(self, statement: stmt.Expression) -> None:
+        self.evaluate(statement.expression)
+        return None
+    
+    def visit_print_stmt(self, statement: stmt.Print) -> None:
+        value: object = self.evaluate(statement.expression)
+        print(self.stringify(value))
+        return None
 
     def visit_literal_expr(self, expression: expr.Literal) -> object:
         return expression.value
@@ -101,9 +114,9 @@ class Interpreter(expr.Visitor):
             return None
         raise runtimeerror.RuntimeError(operator, "Operands must be numbers.")
 
-    def interpret(self, expression: expr.Expr) -> None:
+    def interpret(self, statements: list[stmt.Stmt]) -> None:
         try:
-            value: object = self.evaluate(expression)
-            print(self.stringify(value))
+            for statement in statements:
+                self.execute(statement)
         except RuntimeError as error:
             Pylox.runtime_error(error)
