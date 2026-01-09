@@ -75,3 +75,7 @@ Started `Chapter 7 Evaluating Expressions`. Continue at `Chapter 7.2.5 Evaluatin
 ### 17:00
 
 Implemented Interpreter up to interpret() method. Continue at `Chapter 7.4 Hooking Up the Interpreter` from the stringify() method.
+
+### 00:39
+
+Completed `Chapter 7 Evaluating Expressions`. Continue at `Chapter 8 Statements and State`.
