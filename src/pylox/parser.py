@@ -1,5 +1,6 @@
 from token import TokenType, Token
-from expr import *
+import expr
+import stmt
 from __init__ import Pylox
 
 class Parser:
@@ -11,18 +12,28 @@ class Parser:
         self.tokens = tokens
         self.current = 0
 
-    def expression(self) -> Expr:
+    def expression(self) -> expr.Expr:
         return self.equality()
     
-    def equality(self) -> Expr:
-        expr: Expr = self.comparison()
+    def statement(self) -> stmt.Stmt:
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        return self.expression_statement()
+    
+    def print_statement(self) -> stmt.Stmt:
+        value: expr.Expr = self.expression() # Isn't that what it's all about?
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return stmt.Print(value)
+    
+    def equality(self) -> expr.Expr:
+        expression: expr.Expr = self.comparison()
 
         while self.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL):
             operator: Token = self.previous()
-            right: Expr = self.comparison()
-            expr = Binary(expr, operator, right)
+            right: expr.Expr = self.comparison()
+            expression = expr.Binary(expression, operator, right)
 
-        return expr
+        return expression
     
     def match(self, *tokentypes: TokenType) -> bool:
 
@@ -51,61 +62,61 @@ class Parser:
     def previous(self) -> Token:
         return self.tokens[self.current - 1]
 
-    def comparison(self) -> Expr:
-        expr: Expr = self.term()
+    def comparison(self) -> expr.Expr:
+        expression: expr.Expr = self.term()
 
         while self.match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL):
             operator: Token = self.previous()
-            right: Expr = self.term()
-            expr = Binary(expr, operator, right)
+            right: expr.Expr = self.term()
+            expression = expr.Binary(expression, operator, right)
 
-        return expr
+        return expression
 
-    def term(self) -> Expr:
-        expr: Expr = self.factor()
+    def term(self) -> expr.Expr:
+        expression: expr.Expr = self.factor()
 
         while self.match(TokenType.MINUS, TokenType.PLUS):
             operator: Token = self.previous()
-            right: Expr = self.factor()
-            expr = Binary(expr, operator, right)
+            right: expr.Expr = self.factor()
+            expression = expr.Binary(expression, operator, right)
 
-        return expr
+        return expression
 
-    def factor(self) -> Expr:
-        expr: Expr = self.unary()
+    def factor(self) -> expr.Expr:
+        expression: expr.Expr = self.unary()
         
         while self.match(TokenType.SLASH, TokenType.STAR):
             operator: Token = self.previous()
-            right: Expr = self.unary()
-            expr = Binary(expr, operator, right)
+            right: expr.Expr = self.unary()
+            expression = expr.Binary(expression, operator, right)
         
-        return expr
+        return expression
     
-    def unary(self) -> Expr:
+    def unary(self) -> expr.Expr:
         if self.match(TokenType.BANG, TokenType.MINUS):
             operator: Token = self.previous()
-            right: Expr = self.unary()
-            return Unary(operator, right)
+            right: expr.Expr = self.unary()
+            return expr.Unary(operator, right)
         return self.primary()
 
-    def primary(self) -> Expr:
+    def primary(self) -> expr.Expr:
         
         if self.match(TokenType.FALSE):
-            return Literal(False)
+            return expr.Literal(False)
         
         if self.match(TokenType.TRUE):
-            return Literal(True)
+            return expr.Literal(True)
 
         if self.match(TokenType.NIL):
-            return Literal(None)
+            return expr.Literal(None)
 
         if self.match(TokenType.NUMBER, TokenType.STRING):
-            return Literal(self.previous().literal)
+            return expr.Literal(self.previous().literal)
         
         if self.match(TokenType.LEFT_PAREN):
-            expr: Expr = self.expression()
+            expression: expr.Expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
-            return Grouping(expr)
+            return expr.Grouping(expression)
         
         raise Parser.error(self.peek(), "Expect expression.")
 
@@ -150,8 +161,8 @@ class Parser:
                 
             self.advance()
     
-    def parse(self) -> Expr:
-        try:
-            return self.expression()
-        except Parser.ParseError:
-            return None
+    def parse(self) -> list[Stmt]:
+        statements: list[Stmt] = []
+        while not self.is_at_end():
+            statements.append(self.statement())
+        return statements
