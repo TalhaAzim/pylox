@@ -1,4 +1,5 @@
 from expr import *
+from token import TokenType
 from __init__ import Pylox
 import runtimeerror
 
@@ -14,15 +15,15 @@ class Interpreter(Visitor):
         return self.evaluate(expr.expression)
     
     def visit_unary_expr(self, expr: Unary) -> object:
-        self.check_number_operand(expr.operator, right)
         right: object = self.evaluate(expr.right)
+        self.check_number_operand(expr.operator, right)
 
         match expr.operator.tokentype:
             case TokenType.MINUS:
                 return -right
             case TokenType.BANG:
                 # if it's not tight
-                return self.is_truthy(right)
+                return not self.is_truthy(right)
         
         return None
     
@@ -33,11 +34,11 @@ class Interpreter(Visitor):
             return obj
         return True
     
-    def visit_binary_expr(self, expr: bool) -> object:
-        left: object = expr.left
-        right: object = expr.right
+    def visit_binary_expr(self, expr: Binary) -> object:
+        left: object = self.evaluate(expr.left)
+        right: object = self.evaluate(expr.right)
 
-        match obj.operator.tokentype:
+        match expr.operator.tokentype:
             case TokenType.GREATER:
                 self.check_number_operands(expr.operator, left, right)
                 return left > right
@@ -70,39 +71,39 @@ class Interpreter(Visitor):
             
         return None
 
-        def is_equal(self, a: object, b: object) -> bool:
-            if a is None and b is None:
-                return True
-            if a is None:
-                return False
-            
-            # TODO: verify if the statement below consistently with inteded design
-            return a == b
-        
-        def stringify(self, obj: object) -> str:
-            if obj is None:
-                return "null"
-            
-            if isinstance(obj, float):
-                text: str = str(obj)
-                if text.endswith(".0"):
-                    text = text[:-2]
-            
-            return str(obj)
-    
-        def check_number_operand(self, operator: Token, operand: object) -> None:
-            if (isinstance(operand, float)):
-                return None
-            raise runtimeerror.RuntimeError(operator, "Operand must be a number.")
-        
-        def check_number_operands(self, operator: Token, left: object, right: object) -> None:
-            if ininstance(left, float) and isinstance(right, float):
-                return None
-            raise runtimeerror.RuntimeError(operator, "Operands must be numbers.")
-        
-        def interpret(self, expression: Expr) -> None:
-            try:
-                value: object = self.evaluate(expression)
-                print(self.stringify(value))
-            except RuntimeError as error:
-                Pylox.runtime_error(error)
+    def is_equal(self, a: object, b: object) -> bool:
+        if a is None and b is None:
+            return True
+        if a is None:
+            return False
+
+        # TODO: verify if the statement below consistently with inteded design
+        return a == b
+
+    def stringify(self, obj: object) -> str:
+        if obj is None:
+            return "null"
+
+        if isinstance(obj, float):
+            text: str = str(obj)
+            if text.endswith(".0"):
+                text = text[:-2]
+
+        return str(obj)
+
+    def check_number_operand(self, operator: Token, operand: object) -> None:
+        if (isinstance(operand, float)):
+            return None
+        raise runtimeerror.RuntimeError(operator, "Operand must be a number.")
+
+    def check_number_operands(self, operator: Token, left: object, right: object) -> None:
+        if isinstance(left, float) and isinstance(right, float):
+            return None
+        raise runtimeerror.RuntimeError(operator, "Operands must be numbers.")
+
+    def interpret(self, expression: Expr) -> None:
+        try:
+            value: object = self.evaluate(expression)
+            print(self.stringify(value))
+        except RuntimeError as error:
+            Pylox.runtime_error(error)

@@ -74,7 +74,7 @@ class Pylox:
     
     @staticmethod
     def runtime_error(error: runtimeerror.RuntimeError) -> None:
-        print(f"{error.get_message()}\n[line {error.token.line}]")
+        print(f"{error.message}\n[line {error.token.line}]")
         Pylox.had_runtime_error = True
 
     @staticmethod
