@@ -1,24 +1,24 @@
-from expr import *
-from token import TokenType
+import expr
+from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
 
-class Interpreter(Visitor):
+class Interpreter(expr.Visitor):
 
-    def evaluate(self, expr: Expr) -> object:
-        return expr.accept(self)
+    def evaluate(self, expression: expr.Expr) -> object:
+        return expression.accept(self)
 
-    def visit_literal_expr(self, expr: Literal) -> object:
-        return expr.value
+    def visit_literal_expr(self, expression: expr.Literal) -> object:
+        return expression.value
     
-    def visit_grouping_expr(self, expr: Grouping) -> object:
-        return self.evaluate(expr.expression)
+    def visit_grouping_expr(self, expression: expr.Grouping) -> object:
+        return self.evaluate(expression.expression)
     
-    def visit_unary_expr(self, expr: Unary) -> object:
-        right: object = self.evaluate(expr.right)
-        self.check_number_operand(expr.operator, right)
+    def visit_unary_expr(self, expression: expr.Unary) -> object:
+        right: object = self.evaluate(expression.right)
+        self.check_number_operand(expression.operator, right)
 
-        match expr.operator.tokentype:
+        match expression.operator.tokentype:
             case TokenType.MINUS:
                 return -right
             case TokenType.BANG:
@@ -34,32 +34,32 @@ class Interpreter(Visitor):
             return obj
         return True
     
-    def visit_binary_expr(self, expr: Binary) -> object:
-        left: object = self.evaluate(expr.left)
-        right: object = self.evaluate(expr.right)
+    def visit_binary_expr(self, expression: expr.Binary) -> object:
+        left: object = self.evaluate(expression.left)
+        right: object = self.evaluate(expression.right)
 
-        match expr.operator.tokentype:
+        match expression.operator.tokentype:
             case TokenType.GREATER:
-                self.check_number_operands(expr.operator, left, right)
+                self.check_number_operands(expression.operator, left, right)
                 return left > right
             case TokenType.GREATER_EQUAL:
-                self.check_number_operands(expr.operator, left, right)
+                self.check_number_operands(expression.operator, left, right)
                 return left >= right
             case TokenType.LESS:
-                self.check_number_operands(expr.operator, left, right)
+                self.check_number_operands(expression.operator, left, right)
                 return left < right
             case TokenType.LESS_EQUAL:
-                self.check_number_operands(expr.operator, left, right)
+                self.check_number_operands(expression.operator, left, right)
                 return left <= right
             case TokenType.MINUS:
-                self.check_number_operands(expr.operator, left, right)
+                self.check_number_operands(expression.operator, left, right)
                 return left - right
             case TokenType.PLUS:
                 if (isinstance(left, float) and isinstance(right, float)):
                     return left + right
                 if (isinstance(left, str) and isinstance(right, str)):
                     return left + right # Python overloads + anyway
-                raise runtimeerror.RuntimeError(expr.operator, "Operands must be two numbers or two strings.")
+                raise runtimeerror.RuntimeError(expression.operator, "Operands must be two numbers or two strings.")
             case TokenType.SLASH:
                 return left / right
             case TokenType.STAR:
@@ -101,7 +101,7 @@ class Interpreter(Visitor):
             return None
         raise runtimeerror.RuntimeError(operator, "Operands must be numbers.")
 
-    def interpret(self, expression: Expr) -> None:
+    def interpret(self, expression: expr.Expr) -> None:
         try:
             value: object = self.evaluate(expression)
             print(self.stringify(value))
