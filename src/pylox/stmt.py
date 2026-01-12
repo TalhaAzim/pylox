@@ -23,6 +23,15 @@ class Print(Stmt):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_print_stmt(self)
 
+class Var(Stmt):
+
+    def __init__(self, name: 'Token', initializer: 'Expr') -> None:
+        self.name: 'Token' = name
+        self.initializer: 'Expr' = initializer
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_var_stmt(self)
+
 class Visitor(ABC):
 
     @abstractmethod
@@ -31,5 +40,9 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_print_stmt(self, stmt: 'Print') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_var_stmt(self, stmt: 'Var') -> None:
         raise NotImplementedError
 

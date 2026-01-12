@@ -15,6 +15,15 @@ class Parser:
     def expression(self) -> expr.Expr:
         return self.equality()
     
+    def declaration(self) -> stmt.Stmt:
+        try:
+            if (self.match(TokenType.VAR)):
+                return self.var_declaration();
+            return self.statement()
+        except Parser.ParseError as error:
+            self.synchronize()
+            return None
+    
     def statement(self) -> stmt.Stmt:
         if self.match(TokenType.PRINT):
             return self.print_statement()
@@ -24,6 +33,15 @@ class Parser:
         value: expr.Expr = self.expression() # Isn't that what it's all about?
         self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
         return stmt.Print(value)
+    
+    def var_declaration(self) -> stmt.Stmt:
+        name: Token = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
+
+        initializer: expr.Expr = None
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+        return stmt.Var(name, initializer)
     
     def expression_statement(self) -> stmt.Stmt:
         expression: expr.Expr = self.expression()
@@ -118,6 +136,9 @@ class Parser:
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return expr.Literal(self.previous().literal)
         
+        if self.match(TokenType.IDENTIFIER):
+            return expr.Variable(self.previous())
+        
         if self.match(TokenType.LEFT_PAREN):
             expression: expr.Expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
@@ -169,5 +190,5 @@ class Parser:
     def parse(self) -> list[stmt.Stmt]:
         statements: list[stmt.Stmt] = []
         while not self.is_at_end():
-            statements.append(self.statement())
+            statements.append(self.declaration())
         return statements

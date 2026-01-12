@@ -10,14 +10,16 @@ class GenerateAst():
             sys.exit(64)
         output_dir: str = args[0]
         GenerateAst.define_ast(output_dir, "Expr", [
-            "Binary   -> left: Expr, operator: Token, right: Expr",
-            "Grouping -> expression: Expr",
-            "Literal  -> value: object",
-            "Unary    -> operator: Token, right: Expr"
+            "Binary   -> left: 'Expr', operator: Token, right: 'Expr'",
+            "Grouping -> expression: 'Expr'",
+            "Literal  -> value: 'object'",
+            "Unary    -> operator: 'Token', right: 'Expr'",
+            "Variable -> name: 'Token'"
         ])
         GenerateAst.define_ast(output_dir, "Stmt", [
-            "Expression -> expression: Expr",
-            "Print      -> expression: Expr"
+            "Expression -> expression: 'Expr'",
+            "Print      -> expression: 'Expr'",
+            "Var        -> name: 'Token', initializer: 'Expr'"
         ])
     
     @staticmethod
