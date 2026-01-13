@@ -85,3 +85,7 @@ Completed `Chapter 7 Evaluating Expressions`. Continue at `Chapter 8 Statements 
 ### 16:37
 
 Implemented Interpreter up to `Chapter 8.1.3 Executing Statements`. Continue at `Chapter 8.2 Global Variables`.
+
+## January 13, 2026
+
+Implemented global variables `Chpater 8.4 Assignment`. Continue at `Chapter 8.5 Scope`.

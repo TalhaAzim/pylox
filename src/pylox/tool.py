@@ -10,6 +10,7 @@ class GenerateAst():
             sys.exit(64)
         output_dir: str = args[0]
         GenerateAst.define_ast(output_dir, "Expr", [
+            "Assign   -> name: 'Token', value: 'Expr'",
             "Binary   -> left: 'Expr', operator: Token, right: 'Expr'",
             "Grouping -> expression: 'Expr'",
             "Literal  -> value: 'object'",

@@ -20,7 +20,20 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         value: object = self.evaluate(statement.expression)
         print(self.stringify(value))
         return None
+    
+    def visit_var_stmt(self, statement: stmt.Var) -> None:
+        value: object = None
+        if statement.initializer is not None:
+            value = self.evaluate(statement.initializer)
+        
+        self.environment.define(statement.name.lexeme, value)
+        return None
 
+    def visit_assign_expr(self, expression: expr.Assign) -> object:
+        value: object = self.evaluate(expression.value)
+        self.environment.assign(expression.name, value)
+        return value
+    
     def visit_literal_expr(self, expression: expr.Literal) -> object:
         return expression.value
     
@@ -40,6 +53,9 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         
         return None
     
+    def visit_variable_expr(self) -> None:
+        return self.environment.get(expression.name)
+
     def is_truthy(self, obj: object) -> bool:
         if obj is None:
             return False
@@ -90,7 +106,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         if a is None:
             return False
 
-        # TODO: verify if the statement below consistently with inteded design
+        # TODO: verify if the statement below is consistent with intended design
         return a == b
 
     def stringify(self, obj: object) -> str:
