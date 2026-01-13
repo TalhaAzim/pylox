@@ -33,6 +33,14 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         self.evaluate(statement.expression)
         return None
     
+    def visit_if_stmt(self, statement: stmt.If) -> None:
+        if self.is_truthy(self.evaluate(statement.condition)):
+            self.execute(statement.then_branch)
+        elif statement.else_branch is not None:
+            self.execute(statement.else_branch)
+        
+        return None
+    
     def visit_print_stmt(self, statement: stmt.Print) -> None:
         value: object = self.evaluate(statement.expression)
         print(self.stringify(value))
@@ -45,6 +53,11 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         
         self.environment.define(statement.name.lexeme, value)
         return None
+    
+    def visit_while_stmt(self, statement: stmt.While) -> None:
+        while self.is_truthy(self.evaluate(statement.condition)):
+            self.execute(statement.body)
+        return None
 
     def visit_assign_expr(self, expression: expr.Assign) -> object:
         value: object = self.evaluate(expression.value)
@@ -53,6 +66,18 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def visit_literal_expr(self, expression: expr.Literal) -> object:
         return expression.value
+    
+    def visit_logical_expr(self, expression: expr.Logical) -> object:
+        left: object = self.evaluate(expression.left)
+
+        if expression.operator.type == TokenType.OR:
+            if self.is_truthy(left):
+                return left
+        else:
+            if not self.is_truthy(left):
+                return left
+        
+        return self.evaluate(expression.right)
     
     def visit_grouping_expr(self, expression: expr.Grouping) -> object:
         return self.evaluate(expression.expression)
@@ -101,6 +126,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
                 self.check_number_operands(expression.operator, left, right)
                 return left - right
             case TokenType.PLUS:
+                print(f"Adding {left} and {right}")
                 if (isinstance(left, float) and isinstance(right, float)):
                     return left + right
                 if (isinstance(left, str) and isinstance(right, str)):

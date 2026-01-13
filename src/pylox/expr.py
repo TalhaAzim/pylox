@@ -42,6 +42,16 @@ class Literal(Expr):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_literal_expr(self)
 
+class Logical(Expr):
+
+    def __init__(self, left: 'Expr', operator: 'Token', right: 'Expr') -> None:
+        self.left: 'Expr' = left
+        self.operator: 'Token' = operator
+        self.right: 'Expr' = right
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_logical_expr(self)
+
 class Unary(Expr):
 
     def __init__(self, operator: 'Token', right: 'Expr') -> None:
@@ -75,6 +85,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_literal_expr(self, expr: 'Literal') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_logical_expr(self, expr: 'Logical') -> None:
         raise NotImplementedError
 
     @abstractmethod

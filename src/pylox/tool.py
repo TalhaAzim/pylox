@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys, os
 from abc import ABC, abstractmethod
 
@@ -14,14 +15,17 @@ class GenerateAst():
             "Binary   -> left: 'Expr', operator: Token, right: 'Expr'",
             "Grouping -> expression: 'Expr'",
             "Literal  -> value: 'object'",
+            "Logical  -> left: 'Expr', operator: 'Token', right: 'Expr'",
             "Unary    -> operator: 'Token', right: 'Expr'",
             "Variable -> name: 'Token'"
         ])
         GenerateAst.define_ast(output_dir, "Stmt", [
             "Block      -> statements: 'list[Stmt]'",
             "Expression -> expression: 'Expr'",
+            "If         -> condition: 'Expr', thenBranch: 'Stmt', elseBranch: 'Stmt'",
             "Print      -> expression: 'Expr'",
-            "Var        -> name: 'Token', initializer: 'Expr'"
+            "Var        -> name: 'Token', initializer: 'Expr'",
+            "While      -> condition: 'Expr', body: 'Stmt'"
         ])
     
     @staticmethod

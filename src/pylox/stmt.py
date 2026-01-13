@@ -23,6 +23,16 @@ class Expression(Stmt):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_expression_stmt(self)
 
+class If(Stmt):
+
+    def __init__(self, condition: 'Expr', thenBranch: 'Stmt', elseBranch: 'Stmt') -> None:
+        self.condition: 'Expr' = condition
+        self.thenBranch: 'Stmt' = thenBranch
+        self.elseBranch: 'Stmt' = elseBranch
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_if_stmt(self)
+
 class Print(Stmt):
 
     def __init__(self, expression: 'Expr') -> None:
@@ -40,6 +50,15 @@ class Var(Stmt):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_var_stmt(self)
 
+class While(Stmt):
+
+    def __init__(self, condition: 'Expr', body: 'Stmt') -> None:
+        self.condition: 'Expr' = condition
+        self.body: 'Stmt' = body
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_while_stmt(self)
+
 class Visitor(ABC):
 
     @abstractmethod
@@ -51,10 +70,18 @@ class Visitor(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def visit_if_stmt(self, stmt: 'If') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     def visit_print_stmt(self, stmt: 'Print') -> None:
         raise NotImplementedError
 
     @abstractmethod
     def visit_var_stmt(self, stmt: 'Var') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_while_stmt(self, stmt: 'While') -> None:
         raise NotImplementedError
 

@@ -18,8 +18,8 @@ class Environment():
 
         raise runtimeerror.RuntimeError(name, "Undefined variable '" + name.lexeme + "'.")
     
-    def assign(name: Token, value: object) -> None:
-        if name.lexeme not in self.values:
+    def assign(self, name: Token, value: object) -> None:
+        if name.lexeme in self.values:
             self.values[name.lexeme] = value
             return None
         
