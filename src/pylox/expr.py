@@ -7,6 +7,15 @@ class Expr(ABC):
     def accept(self, visitor: 'Visitor') -> None:
         raise NotImplementedError
 
+class Assign(Expr):
+
+    def __init__(self, name: 'Token', value: 'Expr') -> None:
+        self.name: 'Token' = name
+        self.value: 'Expr' = value
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_assign_expr(self)
+
 class Binary(Expr):
 
     def __init__(self, left: 'Expr', operator: Token, right: 'Expr') -> None:
@@ -51,6 +60,10 @@ class Variable(Expr):
         return visitor.visit_variable_expr(self)
 
 class Visitor(ABC):
+
+    @abstractmethod
+    def visit_assign_expr(self, expr: 'Assign') -> None:
+        raise NotImplementedError
 
     @abstractmethod
     def visit_binary_expr(self, expr: 'Binary') -> None:

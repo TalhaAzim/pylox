@@ -7,6 +7,14 @@ class Stmt(ABC):
     def accept(self, visitor: 'Visitor') -> None:
         raise NotImplementedError
 
+class Block(Stmt):
+
+    def __init__(self, statements: 'list[Stmt]') -> None:
+        self.statements: 'list[Stmt]' = statements
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_block_stmt(self)
+
 class Expression(Stmt):
 
     def __init__(self, expression: 'Expr') -> None:
@@ -33,6 +41,10 @@ class Var(Stmt):
         return visitor.visit_var_stmt(self)
 
 class Visitor(ABC):
+
+    @abstractmethod
+    def visit_block_stmt(self, stmt: 'Block') -> None:
+        raise NotImplementedError
 
     @abstractmethod
     def visit_expression_stmt(self, stmt: 'Expression') -> None:

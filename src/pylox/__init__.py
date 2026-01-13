@@ -47,11 +47,13 @@ class Pylox:
         # Importing scanner, parser, and interpreter here to avoid circular import
         from scanner import Scanner
         from parser import Parser
-        from interpreter import Interpreter
 
         scanner: Scanner = Scanner(source)
         tokens: list[Token] = scanner.scan_tokens()
-        Pylox.interpreter = Interpreter()
+
+        if Pylox.interpreter is None:
+            from interpreter import Interpreter
+            Pylox.interpreter = Interpreter()
 
         parser: Parser = Parser(tokens)
         statements: list[stmt.Stmt] = parser.parse()

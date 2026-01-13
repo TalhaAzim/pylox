@@ -3,14 +3,31 @@ import stmt
 from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
+import environment
 
 class Interpreter(expr.Visitor, stmt.Visitor):
+
+    def __init__(self) -> None:
+        self.environment = environment.Environment()
 
     def evaluate(self, expression: expr.Expr) -> object:
         return expression.accept(self)
     
     def execute(self, statement: stmt.Stmt) -> None:
         statement.accept(self)
+    
+    def execute_block(self, statements: list[stmt.Stmt], environment: environment.Environment) -> None:
+        previous: environment.Environment = self.environment
+        try:
+            self.environment = environment
+            for statement in statements:
+                self.execute(statement)
+        finally:
+            self.environment = previous
+    
+    def visit_block_stmt(self, statement: stmt.Block) -> None:
+        self.execute_block(statement.statements, environment.Environment(self.environment))
+        return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
         self.evaluate(statement.expression)
@@ -53,7 +70,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         
         return None
     
-    def visit_variable_expr(self) -> None:
+    def visit_variable_expr(self, expression: expr.Variable) -> None:
         return self.environment.get(expression.name)
 
     def is_truthy(self, obj: object) -> bool:

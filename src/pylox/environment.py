@@ -11,20 +11,20 @@ class Environment():
     
     def get(self, name: Token) -> object:
         if name.lexeme in self.values:
-            return values[name.lexeme]
+            return self.values[name.lexeme]
         
-        if enclosing:
-            return enclosing[name]
+        if self.enclosing:
+            return self.enclosing.get(name)
 
         raise runtimeerror.RuntimeError(name, "Undefined variable '" + name.lexeme + "'.")
     
     def assign(name: Token, value: object) -> None:
-        if name.lexeme in self.values:
+        if name.lexeme not in self.values:
             self.values[name.lexeme] = value
             return None
         
-        if enclosing:
-            enclosing.assign(name, value)
+        if self.enclosing:
+            self.enclosing.assign(name, value)
             return None
         
         raise runtimeerror.RuntimeError(name, "Undefined variable '" + name.lexeme + "'.")
