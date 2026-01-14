@@ -126,7 +126,6 @@ class Interpreter(expr.Visitor, stmt.Visitor):
                 self.check_number_operands(expression.operator, left, right)
                 return left - right
             case TokenType.PLUS:
-                print(f"Adding {left} and {right}")
                 if (isinstance(left, float) and isinstance(right, float)):
                     return left + right
                 if (isinstance(left, str) and isinstance(right, str)):
