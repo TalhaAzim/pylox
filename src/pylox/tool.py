@@ -13,6 +13,7 @@ class GenerateAst():
         GenerateAst.define_ast(output_dir, "Expr", [
             "Assign   -> name: 'Token', value: 'Expr'",
             "Binary   -> left: 'Expr', operator: Token, right: 'Expr'",
+            "Call     -> callee: 'Expr', paren: 'Token', arguments: 'list[Expr]'",
             "Grouping -> expression: 'Expr'",
             "Literal  -> value: 'object'",
             "Logical  -> left: 'Expr', operator: 'Token', right: 'Expr'",

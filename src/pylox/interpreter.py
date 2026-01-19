@@ -4,11 +4,27 @@ from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
 import environment
+import loxcallable
+import time
+
+class Clock(loxcallable.LoxCallable):
+
+    def arity(self) -> int:
+        return 0
+    
+    def call(self, interpreter: 'Interpreter', arguments: list[object]) -> object:
+        return time.time()
+    
+    def __str__(self):
+        return "<native fn>"
 
 class Interpreter(expr.Visitor, stmt.Visitor):
 
     def __init__(self) -> None:
-        self.environment = environment.Environment()
+        self.globals = environment.Environment()
+        self.environment = self.globals
+
+        self.globals.define("clock", Clock())
 
     def evaluate(self, expression: expr.Expr) -> object:
         return expression.accept(self)
@@ -141,6 +157,22 @@ class Interpreter(expr.Visitor, stmt.Visitor):
                 return self.is_equal(left, right)
             
         return None
+    
+    def visit_call_expr(self, expression: expr.Call) -> object:
+        callee: object = self.evaluate(expression.callee)
+
+        arguments: list[object] = []
+        for argument in expression.arguments:
+            arguments.append(self.evaluate(argument))
+        
+        if not isinstance(callee, LoxCallable):
+            raise runtimeerror.RuntimeError(expression.paren, "Can only call functions and classes.")
+
+        function: LoxCallable = callee
+        if arguments.size() != function.arity():
+            raise runtimeerror.RuntimeError(expression.paren, f"Expected {function.arity()} arguments but got {len(arguments)}")
+        return function.call(self, arguments)
+        
 
     def is_equal(self, a: object, b: object) -> bool:
         if a is None and b is None:

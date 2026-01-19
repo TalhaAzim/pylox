@@ -26,6 +26,16 @@ class Binary(Expr):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_binary_expr(self)
 
+class Call(Expr):
+
+    def __init__(self, callee: 'Expr', paren: 'Token', arguments: 'list[Expr]') -> None:
+        self.callee: 'Expr' = callee
+        self.paren: 'Token' = paren
+        self.arguments: 'list[Expr]' = arguments
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_call_expr(self)
+
 class Grouping(Expr):
 
     def __init__(self, expression: 'Expr') -> None:
@@ -77,6 +87,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_binary_expr(self, expr: 'Binary') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_call_expr(self, expr: 'Call') -> None:
         raise NotImplementedError
 
     @abstractmethod
