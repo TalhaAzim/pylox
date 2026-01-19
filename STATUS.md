@@ -88,10 +88,16 @@ Implemented Interpreter up to `Chapter 8.1.3 Executing Statements`. Continue at 
 
 ## January 13, 2026
 
-## 14:30
+### 14:30
 
 Implemented global variables `Chpater 8.4 Assignment`. Continue at `Chapter 8.5 Scope`.
 
-## 16:44
+### 16:44
 
 Completed `Chapter 9 Control Flow`. Continue with `Chapter 10 Functions`.
+
+## January 19, 2026
+
+### 13:57
+
+Completed `Chapter 10.2 Native Functions`. Continue with `Chapter 10.3 Function Declarations`. 
