@@ -101,3 +101,7 @@ Completed `Chapter 9 Control Flow`. Continue with `Chapter 10 Functions`.
 ### 13:57
 
 Completed `Chapter 10.2 Native Functions`. Continue with `Chapter 10.3 Function Declarations`. 
+
+### 17:01
+
+Completed implementation of `LoxFunction`. Continue with `Chapter 10.4.1 Interpreting function declarations`.

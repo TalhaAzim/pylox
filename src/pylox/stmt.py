@@ -23,6 +23,16 @@ class Expression(Stmt):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_expression_stmt(self)
 
+class Function(Stmt):
+
+    def __init__(self, name: 'Token', params: list[Token], body: list[Stmt]) -> None:
+        self.name: 'Token' = name
+        self.params: list[Token] = params
+        self.body: list[Stmt] = body
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_function_stmt(self)
+
 class If(Stmt):
 
     def __init__(self, condition: 'Expr', thenBranch: 'Stmt', elseBranch: 'Stmt') -> None:
@@ -67,6 +77,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_expression_stmt(self, stmt: 'Expression') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_function_stmt(self, stmt: 'Function') -> None:
         raise NotImplementedError
 
     @abstractmethod
