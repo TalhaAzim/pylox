@@ -4,7 +4,7 @@ from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
 import environment
-import loxcallable
+import loxcallable, loxfunction
 import time
 
 class Clock(loxcallable.LoxCallable):
@@ -47,6 +47,11 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
         self.evaluate(statement.expression)
+        return None
+    
+    def visit_function_stmt(self, statement: stmt.Function) -> None:
+        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement)
+        self.environment.define(statement.name.lexeme, function)
         return None
     
     def visit_if_stmt(self, statement: stmt.If) -> None:
