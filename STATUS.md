@@ -105,3 +105,9 @@ Completed `Chapter 10.2 Native Functions`. Continue with `Chapter 10.3 Function 
 ### 17:01
 
 Completed implementation of `LoxFunction`. Continue with `Chapter 10.4.1 Interpreting function declarations`.
+
+## January 22, 2026
+
+### 10:43
+
+Completed implementation of function return feature. Continue at `Chapter 10.6 Local Functions and Closures`.
