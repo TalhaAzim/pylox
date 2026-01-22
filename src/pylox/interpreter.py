@@ -3,7 +3,7 @@ import stmt
 from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
-import environment
+from environment import Environment
 import loxcallable, loxfunction
 import time
 
@@ -21,7 +21,7 @@ class Clock(loxcallable.LoxCallable):
 class Interpreter(expr.Visitor, stmt.Visitor):
 
     def __init__(self) -> None:
-        self.globals = environment.Environment()
+        self.globals = Environment()
         self.environment = self.globals
 
         self.globals.define("clock", Clock())
@@ -32,8 +32,8 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def execute(self, statement: stmt.Stmt) -> None:
         statement.accept(self)
     
-    def execute_block(self, statements: list[stmt.Stmt], environment: environment.Environment) -> None:
-        previous: environment.Environment = self.environment
+    def execute_block(self, statements: list[stmt.Stmt], environment: Environment) -> None:
+        previous: Environment = self.environment
         try:
             self.environment = environment
             for statement in statements:
@@ -42,7 +42,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             self.environment = previous
     
     def visit_block_stmt(self, statement: stmt.Block) -> None:
-        self.execute_block(statement.statements, environment.Environment(self.environment))
+        self.execute_block(statement.statements, Environment(self.environment))
         return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
@@ -91,7 +91,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def visit_logical_expr(self, expression: expr.Logical) -> object:
         left: object = self.evaluate(expression.left)
 
-        if expression.operator.type == TokenType.OR:
+        if expression.operator.tokentype == TokenType.OR:
             if self.is_truthy(left):
                 return left
         else:

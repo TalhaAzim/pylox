@@ -1,5 +1,6 @@
 from token import Token
 import runtimeerror
+
 class Environment():
 
     def __init__(self, enclosing: 'Environment' = None) -> None:

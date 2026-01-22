@@ -1,5 +1,5 @@
 import loxcallable
-import environment
+from environment import Environment
 
 class LoxFunction(loxcallable.LoxCallable):
 
@@ -10,12 +10,12 @@ class LoxFunction(loxcallable.LoxCallable):
         return len(self.declaration.params)
 
     def call(self, interpreter: 'Interpreter', arguments: list[object]) -> object:
-        environment: environment.Environment = environment.Environment()
+        environment: Environment = Environment(interpreter.globals)
 
         for param, argument in zip(self.declaration.params, arguments):
             environment.define(param.lexeme, argument)
         
-        interpreter.execute_block(declaration.body, environment)
+        interpreter.execute_block(self.declaration.body, environment)
         return None
     
     def __str__(self):

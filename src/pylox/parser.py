@@ -266,6 +266,10 @@ class Parser:
                 arguments.append(self.expression())
                 if not self.match(TokenType.COMMA):
                     break
+        
+        paren: Token = self.consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.")
+
+        return expr.Call(callee, paren, arguments)
     
     def call(self) -> expr.Expr:
         expression: expr.Expr = self.primary()

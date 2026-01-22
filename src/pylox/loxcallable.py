@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 class LoxCallable(ABC):
 
     @abstractmethod
-    def arity() -> int:
+    def arity(self) -> int:
         raise NotImplementedError
 
     @abstractmethod
