@@ -36,6 +36,9 @@ class Parser:
         if self.match(TokenType.PRINT):
             return self.print_statement()
         
+        if self.match(TokenType.RETURN):
+            return self.return_statement()
+        
         if self.match(TokenType.WHILE):
             return self.while_statement()
 
@@ -97,6 +100,16 @@ class Parser:
         value: expr.Expr = self.expression() # Isn't that what it's all about?
         self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
         return stmt.Print(value)
+    
+    def return_statement(self) -> stmt.Stmt:
+        keyword: Token = self.previous()
+        value: expr.Expr = None
+
+        if not self.check(TokenType.SEMICOLON):
+            value = self.expression()
+
+        self.consume(TokenType.SEMICOLON, "Expect ';' after return value.")
+        return stmt.Return(keyword, value)
     
     def var_declaration(self) -> stmt.Stmt:
         name: Token = self.consume(TokenType.IDENTIFIER, "Expect variable name.")

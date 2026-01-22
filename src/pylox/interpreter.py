@@ -3,6 +3,7 @@ import stmt
 from token import TokenType, Token
 from __init__ import Pylox
 import runtimeerror
+from returnexception import ReturnException
 from environment import Environment
 import loxcallable, loxfunction
 import time
@@ -66,6 +67,13 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         value: object = self.evaluate(statement.expression)
         print(self.stringify(value))
         return None
+    
+    def visit_return_stmt(self, statement: stmt.Return) -> None:
+        value: object = None
+        if statement.value is not None:
+            value = self.evaluate(statement.value)
+        
+        raise ReturnException(value)
     
     def visit_var_stmt(self, statement: stmt.Var) -> None:
         value: object = None
