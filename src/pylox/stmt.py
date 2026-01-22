@@ -35,10 +35,10 @@ class Function(Stmt):
 
 class If(Stmt):
 
-    def __init__(self, condition: 'Expr', thenBranch: 'Stmt', elseBranch: 'Stmt') -> None:
+    def __init__(self, condition: 'Expr', then_branch: 'Stmt', else_branch: 'Stmt') -> None:
         self.condition: 'Expr' = condition
-        self.thenBranch: 'Stmt' = thenBranch
-        self.elseBranch: 'Stmt' = elseBranch
+        self.then_branch: 'Stmt' = then_branch
+        self.else_branch: 'Stmt' = else_branch
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_if_stmt(self)
@@ -50,6 +50,15 @@ class Print(Stmt):
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_print_stmt(self)
+
+class Return(Stmt):
+
+    def __init__(self, keyword: 'Token', value: 'Expr') -> None:
+        self.keyword: 'Token' = keyword
+        self.value: 'Expr' = value
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_return_stmt(self)
 
 class Var(Stmt):
 
@@ -89,6 +98,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_print_stmt(self, stmt: 'Print') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_return_stmt(self, stmt: 'Return') -> None:
         raise NotImplementedError
 
     @abstractmethod
