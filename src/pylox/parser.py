@@ -134,11 +134,11 @@ class Parser:
                 if not self.match(TokenType.COMMA):
                     break
             
-            self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.")
+        self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.")
 
-            self.consume(TokenType.LEFT_BRACE, f"Expect '{{' before {kind} body.")
-            body: list[stmt.Stmt] = self.block()
-            return stmt.Function(name, parameters, body)
+        self.consume(TokenType.LEFT_BRACE, f"Expect '{{' before {kind} body.")
+        body: list[stmt.Stmt] = self.block()
+        return stmt.Function(name, parameters, body)
     
     def block(self) -> list[stmt.Stmt]:
         statements: list[stmt.Stmt] = []

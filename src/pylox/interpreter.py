@@ -170,11 +170,11 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         for argument in expression.arguments:
             arguments.append(self.evaluate(argument))
         
-        if not isinstance(callee, LoxCallable):
+        if not isinstance(callee, loxcallable.LoxCallable):
             raise runtimeerror.RuntimeError(expression.paren, "Can only call functions and classes.")
 
-        function: LoxCallable = callee
-        if arguments.size() != function.arity():
+        function: loxcallable.LoxCallable = callee
+        if len(arguments) != function.arity():
             raise runtimeerror.RuntimeError(expression.paren, f"Expected {function.arity()} arguments but got {len(arguments)}")
         return function.call(self, arguments)
         

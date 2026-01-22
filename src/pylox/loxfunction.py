@@ -6,6 +6,9 @@ class LoxFunction(loxcallable.LoxCallable):
     def __init__(self, declaration: 'stmt.Function'):
         self.declaration = declaration
     
+    def arity(self) -> int:
+        return len(self.declaration.params)
+
     def call(self, interpreter: 'Interpreter', arguments: list[object]) -> object:
         environment: environment.Environment = environment.Environment()
 
