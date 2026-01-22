@@ -51,7 +51,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_function_stmt(self, statement: stmt.Function) -> None:
-        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement)
+        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement, self.environment)
         self.environment.define(statement.name.lexeme, function)
         return None
     

@@ -111,3 +111,7 @@ Completed implementation of `LoxFunction`. Continue with `Chapter 10.4.1 Interpr
 ### 10:43
 
 Completed implementation of function return feature. Continue at `Chapter 10.6 Local Functions and Closures`.
+
+### 13:07
+
+Completed `Chapter 10 Functions`. Continue at `Chapter 11 Resolving and Binding`.

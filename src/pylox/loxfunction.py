@@ -4,14 +4,15 @@ from returnexception import ReturnException
 
 class LoxFunction(loxcallable.LoxCallable):
 
-    def __init__(self, declaration: 'stmt.Function'):
+    def __init__(self, declaration: 'stmt.Function', closure: Environment = None) -> None:
+        self.closure = closure
         self.declaration = declaration
     
     def arity(self) -> int:
         return len(self.declaration.params)
 
     def call(self, interpreter: 'Interpreter', arguments: list[object]) -> object:
-        environment: Environment = Environment(interpreter.globals)
+        environment: Environment = Environment(self.closure)
 
         for param, argument in zip(self.declaration.params, arguments):
             environment.define(param.lexeme, argument)
