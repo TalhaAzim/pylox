@@ -115,3 +115,9 @@ Completed implementation of function return feature. Continue at `Chapter 10.6 L
 ### 13:07
 
 Completed `Chapter 10 Functions`. Continue at `Chapter 11 Resolving and Binding`.
+
+## January 24, 2026
+
+### 00:32
+
+Completed implementation of Resolver class. Continue at `Chapter 11.4 Interpreting Resolved Variables`.
