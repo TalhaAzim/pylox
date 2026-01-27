@@ -121,3 +121,10 @@ Completed `Chapter 10 Functions`. Continue at `Chapter 11 Resolving and Binding`
 ### 00:32
 
 Completed implementation of Resolver class. Continue at `Chapter 11.4 Interpreting Resolved Variables`.
+
+## January 26, 2026
+
+### 23:52
+
+Completed `Chapter 11.4 Interpreting Resolved Variables`. Continue at `Chapter 11.5 Resolution Errors`.
+Not for a while though. Take a break. IRL stuff getting too heavy.

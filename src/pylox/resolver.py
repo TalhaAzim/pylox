@@ -1,12 +1,16 @@
 import expr, stmt
 from interpreter import Interpreter
 from token import Token
+from enum import Enum
+
+FunctionType = Enum("FunctionType", ["NONE", "FUNCTION"]) 
 
 class Resolver(expr.Visitor, stmt.Visitor):
 
     def __init__(self, interpreter: Interpreter) -> None:
         self.interpreter = interpreter
         self.scopes = []
+        self.current_function = FunctionType.NONE
 
     def visit_block_stmt(self, statement: stmt.Block) -> None:
         self.begin_scope()

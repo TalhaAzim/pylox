@@ -61,6 +61,10 @@ class Pylox:
         if Pylox.had_error:
             return
         
+        from resolver import Resolver
+        resolver: Resolver = Resolver(interpreter)
+        resolver.resolve(statement)
+        
         Pylox.interpreter.interpret(statements)
 
     @staticmethod

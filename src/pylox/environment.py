@@ -19,6 +19,19 @@ class Environment():
 
         raise runtimeerror.RuntimeError(name, "Undefined variable '" + name.lexeme + "'.")
     
+    def get_at(self, distance: int, name: str) -> None:
+        return self.ancestor(distance).values[name]
+    
+    def assign_at(self, distance: int, name: str, value: object) -> None:
+        self.ancestor.values[name] = value
+    
+    def ancestor(self, distance: int) -> 'Environment':
+        environment: 'Environment' = self
+        for i in range(distance):
+            environment = environment.closing
+        return environment
+
+    
     def assign(self, name: Token, value: object) -> None:
         if name.lexeme in self.values:
             self.values[name.lexeme] = value

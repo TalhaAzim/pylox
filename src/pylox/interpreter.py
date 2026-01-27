@@ -90,7 +90,10 @@ class Interpreter(expr.Visitor, stmt.Visitor):
 
     def visit_assign_expr(self, expression: expr.Assign) -> object:
         value: object = self.evaluate(expression.value)
-        self.environment.assign(expression.name, value)
+        if self.distance is not None:
+            self.environment.assign_at(distance, expression.name, value)
+        else:
+            self.globals.assign(expression.name, value)
         return value
     
     def visit_literal_expr(self, expression: expr.Literal) -> object:
@@ -125,7 +128,15 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_variable_expr(self, expression: expr.Variable) -> None:
-        return self.environment.get(expression.name)
+        return self.lookup_variable(expression.name, expression)
+    
+    def lookup_variable_expr(self, name: Token, expression: expr.Expr) -> None:
+        distance: int = self.locals.get(expression, None)
+        
+        if distance is not None:
+            return self.environment.get_at(distance, name.lexeme)
+        else:
+            return self.globals.get(name)
 
     def is_truthy(self, obj: object) -> bool:
         if obj is None:
