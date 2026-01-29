@@ -20,6 +20,7 @@
       "ms-python.debugpy"
       "ms-python.python"
       "arcticicestudio.nord-visual-studio-code"
+      "Anthropic.claude-code"
     ];
     # Enable previews
     previews = {
