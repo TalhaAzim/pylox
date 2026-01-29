@@ -5,6 +5,8 @@
   channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
+    claude-code
+    opencode
     (python313.withPackages (pypkgs: with pypkgs; [
       python-lsp-server
     ]))
