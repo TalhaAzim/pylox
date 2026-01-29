@@ -89,7 +89,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
         self.scopes[-1][name.lexeme] = True
     
     def visit_variable_expr(self, expression: expr.Variable) -> None:
-        if len(self.scopes > 0) and self.scopes[-1][expression.name.lexeme == False]:
+        if len(self.scopes) > 0 and self.scopes[-1].get(expression.name.lexeme) == False:
             from __init__ import Pylox
             Pylox.error(expression.name, "Can't read local variable in it's own initializer.")
         

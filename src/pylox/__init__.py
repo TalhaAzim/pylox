@@ -62,8 +62,9 @@ class Pylox:
             return
         
         from resolver import Resolver
-        resolver: Resolver = Resolver(interpreter)
-        resolver.resolve(statement)
+        resolver: Resolver = Resolver(Pylox.interpreter)
+        for statement in statements:
+            resolver.resolve(statement)
         
         Pylox.interpreter.interpret(statements)
 
