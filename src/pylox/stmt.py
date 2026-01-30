@@ -25,10 +25,10 @@ class Expression(Stmt):
 
 class Function(Stmt):
 
-    def __init__(self, name: 'Token', params: list[Token], body: list[Stmt]) -> None:
-        self.name: 'Token' = name
-        self.params: list[Token] = params
-        self.body: list[Stmt] = body
+    def __init__(self, name: Token, params: 'list[Token]', body: 'list[Stmt]') -> None:
+        self.name: Token = name
+        self.params: 'list[Token]' = params
+        self.body: 'list[Stmt]' = body
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_function_stmt(self)
@@ -53,8 +53,8 @@ class Print(Stmt):
 
 class Return(Stmt):
 
-    def __init__(self, keyword: 'Token', value: 'Expr') -> None:
-        self.keyword: 'Token' = keyword
+    def __init__(self, keyword: Token, value: 'Expr') -> None:
+        self.keyword: Token = keyword
         self.value: 'Expr' = value
 
     def accept(self, visitor: 'Visitor') -> None:
@@ -62,8 +62,8 @@ class Return(Stmt):
 
 class Var(Stmt):
 
-    def __init__(self, name: 'Token', initializer: 'Expr') -> None:
-        self.name: 'Token' = name
+    def __init__(self, name: Token, initializer: 'Expr') -> None:
+        self.name: Token = name
         self.initializer: 'Expr' = initializer
 
     def accept(self, visitor: 'Visitor') -> None:

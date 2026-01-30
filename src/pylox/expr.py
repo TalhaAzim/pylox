@@ -9,8 +9,8 @@ class Expr(ABC):
 
 class Assign(Expr):
 
-    def __init__(self, name: 'Token', value: 'Expr') -> None:
-        self.name: 'Token' = name
+    def __init__(self, name: Token, value: 'Expr') -> None:
+        self.name: Token = name
         self.value: 'Expr' = value
 
     def accept(self, visitor: 'Visitor') -> None:
@@ -28,9 +28,9 @@ class Binary(Expr):
 
 class Call(Expr):
 
-    def __init__(self, callee: 'Expr', paren: 'Token', arguments: 'list[Expr]') -> None:
+    def __init__(self, callee: 'Expr', paren: Token, arguments: 'list[Expr]') -> None:
         self.callee: 'Expr' = callee
-        self.paren: 'Token' = paren
+        self.paren: Token = paren
         self.arguments: 'list[Expr]' = arguments
 
     def accept(self, visitor: 'Visitor') -> None:
@@ -46,17 +46,17 @@ class Grouping(Expr):
 
 class Literal(Expr):
 
-    def __init__(self, value: 'object') -> None:
-        self.value: 'object' = value
+    def __init__(self, value: object) -> None:
+        self.value: object = value
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_literal_expr(self)
 
 class Logical(Expr):
 
-    def __init__(self, left: 'Expr', operator: 'Token', right: 'Expr') -> None:
+    def __init__(self, left: 'Expr', operator: Token, right: 'Expr') -> None:
         self.left: 'Expr' = left
-        self.operator: 'Token' = operator
+        self.operator: Token = operator
         self.right: 'Expr' = right
 
     def accept(self, visitor: 'Visitor') -> None:
@@ -64,8 +64,8 @@ class Logical(Expr):
 
 class Unary(Expr):
 
-    def __init__(self, operator: 'Token', right: 'Expr') -> None:
-        self.operator: 'Token' = operator
+    def __init__(self, operator: Token, right: 'Expr') -> None:
+        self.operator: Token = operator
         self.right: 'Expr' = right
 
     def accept(self, visitor: 'Visitor') -> None:
@@ -73,8 +73,8 @@ class Unary(Expr):
 
 class Variable(Expr):
 
-    def __init__(self, name: 'Token') -> None:
-        self.name: 'Token' = name
+    def __init__(self, name: Token) -> None:
+        self.name: Token = name
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_variable_expr(self)
