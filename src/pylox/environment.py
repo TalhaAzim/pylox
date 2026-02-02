@@ -22,13 +22,13 @@ class Environment():
     def get_at(self, distance: int, name: str) -> None:
         return self.ancestor(distance).values[name]
     
-    def assign_at(self, distance: int, name: str, value: object) -> None:
-        self.ancestor.values[name] = value
+    def assign_at(self, distance: int, name: Token, value: object) -> None:
+        self.ancestor(distance).values[name.lexeme] = value
     
     def ancestor(self, distance: int) -> 'Environment':
         environment: 'Environment' = self
         for i in range(distance):
-            environment = environment.closing
+            environment = environment.enclosing
         return environment
 
     

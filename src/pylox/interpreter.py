@@ -94,7 +94,8 @@ class Interpreter(expr.Visitor, stmt.Visitor):
 
     def visit_assign_expr(self, expression: expr.Assign) -> object:
         value: object = self.evaluate(expression.value)
-        if self.distance is not None:
+        distance: int = self.locals.get(expression, None)
+        if distance is not None:
             self.environment.assign_at(distance, expression.name, value)
         else:
             self.globals.assign(expression.name, value)

@@ -121,6 +121,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
             if name.lexeme in self.scopes[index]:
                 self.interpreter.resolve(expression, len(self.scopes) - 1 - index)
                 return
+            index -= 1
     
     def visit_assign_expr(self, expression: expr.Assign) -> None:
         self.resolve(expression.value)
