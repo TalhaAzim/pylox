@@ -24,6 +24,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def __init__(self) -> None:
         self.globals = Environment()
         self.environment = self.globals
+        self.locals = {}
 
         self.globals.define("clock", Clock())
 
@@ -32,6 +33,9 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def execute(self, statement: stmt.Stmt) -> None:
         statement.accept(self)
+    
+    def resolve(self, expression: expr.Expr, depth: int) -> None:
+        self.locals[expression] = depth
     
     def execute_block(self, statements: list[stmt.Stmt], environment: Environment) -> None:
         previous: Environment = self.environment
@@ -130,7 +134,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def visit_variable_expr(self, expression: expr.Variable) -> None:
         return self.lookup_variable(expression.name, expression)
     
-    def lookup_variable_expr(self, name: Token, expression: expr.Expr) -> None:
+    def lookup_variable(self, name: Token, expression: expr.Expr) -> None:
         distance: int = self.locals.get(expression, None)
         
         if distance is not None:

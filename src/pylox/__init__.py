@@ -63,8 +63,10 @@ class Pylox:
         
         from resolver import Resolver
         resolver: Resolver = Resolver(Pylox.interpreter)
-        for statement in statements:
-            resolver.resolve(statement)
+        resolver.resolve(statements)
+       
+        if Pylox.had_error:
+            return
         
         Pylox.interpreter.interpret(statements)
 

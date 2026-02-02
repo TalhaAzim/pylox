@@ -14,7 +14,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
 
     def visit_block_stmt(self, statement: stmt.Block) -> None:
         self.begin_scope()
-        self.resolve(stmt.statements)
+        self.resolve(statement.statements)
         self.end_scope()
         return None 
     
@@ -26,12 +26,12 @@ class Resolver(expr.Visitor, stmt.Visitor):
         self.declare(statement.name)
         self.define(statement.name)
 
-        self.resolve_function(statement)
+        self.resolve_function(statement, FunctionType.FUNCTION)
         return None
     
     def visit_if_stmt(self, statement: stmt.If) -> None:
         self.resolve(statement.condition)
-        self.resolve(statement.if_branch)
+        self.resolve(statement.then_branch)
         if not statement.else_branch is None:
             self.resolve(statement.else_branch)
         return None
@@ -41,22 +41,35 @@ class Resolver(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_return_stmt(self, statement: stmt.Return) -> None:
+        if self.current_function == FunctionType.NONE:
+            from __init__ import Pylox # TODO: fix circular imports
+            Pylox.error(statement.keyword, "Can't return from top-level code.")
+
         if not statement.value is None:
             self.resolve(statement.value)
         return None
     
-    def resolve(self, statement: stmt.Stmt | expr.Expr) -> None:
-        statement.accept(self) # It's all about that self acceptance.
+    def resolve(self, statement: list[stmt.Stmt] | stmt.Stmt | expr.Expr) -> None:
+        
+        if type(statement) is list:
+            for s in statement:
+                self.resolve(s)
+        else:
+            statement.accept(self) # It's all about that self acceptance.
     
-    def resolve_function(self, statement: stmt.Function) -> None:
+    def resolve_function(self, function: stmt.Function, fn_type: FunctionType) -> None:
+        enclosing_function: FunctionType = self.current_function
+        self.current_function = fn_type
+        
         self.begin_scope()
 
-        for param in statement.params:
+        for param in function.params:
             self.declare(param)
             self.define(param)
         
         self.resolve(function.body)
         self.end_scope()
+        self.current_function = enclosing_function
 
     def begin_scope(self) -> None:
         self.scopes.append({})
@@ -64,14 +77,14 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def end_scope(self) -> None:
         self.scopes.pop()
     
-    def visit_var_statement(self, statement: stmt.Var) -> None:
+    def visit_var_stmt(self, statement: stmt.Var) -> None:
         self.declare(statement.name)
         if statement.initializer is not None:
             self.resolve(statement.initializer)
         self.define(statement.name)
         return None
 
-    def visit_while_statement(self, statement: stmt.While) -> None:
+    def visit_while_stmt(self, statement: stmt.While) -> None:
         self.resolve(statement.condition)
         self.resolve(statement.body)
         return None
@@ -80,7 +93,12 @@ class Resolver(expr.Visitor, stmt.Visitor):
         if len(self.scopes) == 0:
             return None
         
-        self.scopes[-1][name.lexeme] = False
+        scope = self.scopes[-1]
+        if name.lexeme in scope:
+            from __init__ import Pylox # TODO: Fix circular import issue
+            Pylox.error(name, "Already a variable with this name in this scope")
+
+        scope[name.lexeme] = False
     
     def define(self, name: Token) -> None:
         if len(self.scopes) == 0:

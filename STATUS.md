@@ -128,3 +128,9 @@ Completed implementation of Resolver class. Continue at `Chapter 11.4 Interpreti
 
 Completed `Chapter 11.4 Interpreting Resolved Variables`. Continue at `Chapter 11.5 Resolution Errors`.
 Not for a while though. Take a break. IRL stuff getting too heavy.
+
+## February 1, 2026
+
+### 23:53
+
+Completed `Chapter 11 Resolving and Binding`. Test file does not terminated. Need to fix before proceeding with next chapter.
