@@ -134,3 +134,9 @@ Not for a while though. Take a break. IRL stuff getting too heavy.
 ### 23:53
 
 Completed `Chapter 11 Resolving and Binding`. Test file does not terminated. Need to fix before proceeding with next chapter.
+
+## February 2, 2026
+
+### 23:14
+
+Started `Chapter 12.2 Class Declarations`. Continue with updates to `Parser.declaration()`. Go slow.
