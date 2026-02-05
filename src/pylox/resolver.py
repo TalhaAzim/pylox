@@ -3,7 +3,7 @@ from interpreter import Interpreter
 from token import Token
 from enum import Enum
 
-FunctionType = Enum("FunctionType", ["NONE", "FUNCTION"]) 
+FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "METHOD"]) 
 
 class Resolver(expr.Visitor, stmt.Visitor):
 
@@ -21,6 +21,11 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def visit_class_stmt(self, statement: stmt.Class) -> None:
         self.declare(statement.name)
         self.declare(statement.name)
+
+        for method in statement.methods:
+            declaration: FunctionType = FunctionType.METHOD
+            self.resolve_function(method, declaration)
+
         return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:

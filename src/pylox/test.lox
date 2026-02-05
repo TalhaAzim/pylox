@@ -39,7 +39,8 @@ class SuperAwesomeServer {
   }
 }
 
-print SuperAwesomeServer;
+
+print SuperAwesomeServer().runGameFast();
 
 class Bagel {}
 var bagel = Bagel();

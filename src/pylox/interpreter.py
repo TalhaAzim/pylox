@@ -52,7 +52,16 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def visit_class_stmt(self, statement: stmt.Class) -> None:
         self.environment.define(statement.name.lexeme, None)
-        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme)
+
+        methods: dict[str, loxfunction.LoxFunction] = {}
+        for method in statement.methods:
+            function: loxfunction.LoxFunction = loxfunction.LoxFunction(
+                method,
+                self.environment
+            )
+            methods[method.name.lexeme] = function
+        
+        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, methods)
         self.environment.assign(statement.name, klass)
         return None
     

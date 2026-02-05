@@ -146,3 +146,7 @@ Started `Chapter 12.2 Class Declarations`. Continue with updates to `Parser.decl
 ## 13:16
 
 Completed `Chapter 12.4 Properties on Classes`. Continue with `Chapter 12.5 Methods on Classes`.
+
+## 14:05
+
+Completed `Chapter 12.5 Methods on Classes`. Continue at `Chapter 12.6 This`.

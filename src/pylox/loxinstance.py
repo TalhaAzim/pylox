@@ -1,5 +1,6 @@
 
 import runtimeerror
+import loxfunction
 
 class LoxInstance:
 
@@ -10,9 +11,13 @@ class LoxInstance:
     def get(self, name: 'Token') -> object:
         if name.lexeme in self.fields:
             return self.fields[name.lexeme]
-        
-        raise runtimeerror.RuntimeError(name, f"Undefined property '{name.lexeme}'.")
+
+        method: loxfunction.LoxFunction = self.klass.find_method(name.lexeme)
+        if method is not None:
+            return method
     
+        raise runtimeerror.RuntimeError(name, f"Undefined property '{name.lexeme}'.")
+
     def set(self, name: 'Token', value: object) -> None:
         self.fields[name.lexeme] = value
     
