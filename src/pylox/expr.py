@@ -36,6 +36,15 @@ class Call(Expr):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_call_expr(self)
 
+class Get(Expr):
+
+    def __init__(self, objekt: 'Expr', name: Token) -> None:
+        self.objekt: 'Expr' = objekt
+        self.name: Token = name
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_get_expr(self)
+
 class Grouping(Expr):
 
     def __init__(self, expression: 'Expr') -> None:
@@ -61,6 +70,16 @@ class Logical(Expr):
 
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_logical_expr(self)
+
+class Set(Expr):
+
+    def __init__(self, objekt: 'Expr', name: Token, value: 'Expr') -> None:
+        self.objekt: 'Expr' = objekt
+        self.name: Token = name
+        self.value: 'Expr' = value
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_set_expr(self)
 
 class Unary(Expr):
 
@@ -94,6 +113,10 @@ class Visitor(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def visit_get_expr(self, expr: 'Get') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     def visit_grouping_expr(self, expr: 'Grouping') -> None:
         raise NotImplementedError
 
@@ -103,6 +126,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_logical_expr(self, expr: 'Logical') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_set_expr(self, expr: 'Set') -> None:
         raise NotImplementedError
 
     @abstractmethod

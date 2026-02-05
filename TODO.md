@@ -2,16 +2,7 @@
 
 This document outlines a comprehensive refactoring plan to transform the current 1:1 Java port of the Lox interpreter into idiomatic, maintainable Python code with a focus on **modular components** and **instance-based architecture** that can be swapped out for learning and experimentation purposes, including the ability to run multiple interpreter instances.
 
-## Phase 0: Critical Bug Fixes (Immediate Priority)
-
-The current codebase has several critical bugs that prevent proper execution:
-
-1. **interpreter.py:94** - undefined `distance` variable in `visit_assign_expr`
-2. **interpreter.py:133** - method name mismatch (`visit_variable_expr` vs `lookup_variable_expr`)  
-3. **environment.py:31** - incorrect attribute reference (`closing` vs `enclosing`)
-4. **resolver.py:58** - undefined `function` variable in `resolve_function`
-
-## Phase 0.5: Instance-Based Architecture Refactoring
+## Phase 0: Instance-Based Architecture Refactoring
 
 **Convert from Java-like static/class-based to Pythonic instance-based design:**
 

@@ -11,12 +11,17 @@ class Resolver(expr.Visitor, stmt.Visitor):
         self.interpreter = interpreter
         self.scopes = []
         self.current_function = FunctionType.NONE
-
+    
     def visit_block_stmt(self, statement: stmt.Block) -> None:
         self.begin_scope()
         self.resolve(statement.statements)
         self.end_scope()
         return None 
+    
+    def visit_class_stmt(self, statement: stmt.Class) -> None:
+        self.declare(statement.name)
+        self.declare(statement.name)
+        return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
         self.resolve(statement.expression)
@@ -126,6 +131,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def visit_assign_expr(self, expression: expr.Assign) -> None:
         self.resolve(expression.value)
         self.resolve_local(expression, expression.name)
+        return None
     
     def visit_binary_expr(self, expression: expr.Binary) -> None:
         self.resolve(expression.left)
@@ -139,6 +145,10 @@ class Resolver(expr.Visitor, stmt.Visitor):
             self.resolve(argument)
         
         return None
+    
+    def visit_get_expr(self, expression: expr.Get) -> None:
+        self.resolve(expression.objekt)
+        return None
 
     def visit_grouping_expr(self, expression: expr.Grouping) -> None:
         self.resolve(expression.expression)
@@ -150,6 +160,11 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def visit_logical_expr(self, expression: expr.Logical) -> None:
         self.resolve(expression.left)
         self.resolve(expression.right)
+        return None
+    
+    def visit_set_expr(self, expression: expr.Set) -> None:
+        self.resolve(expression.value)
+        self.resolve(expression.objekt)        
         return None
 
     def visit_unary_expr(self, expression: expr.Unary) -> None:

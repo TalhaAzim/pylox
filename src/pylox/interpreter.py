@@ -5,7 +5,7 @@ from __init__ import Pylox
 import runtimeerror
 from returnexception import ReturnException
 from environment import Environment
-import loxcallable, loxfunction
+import loxcallable, loxfunction, loxclass, loxinstance
 import time
 
 class Clock(loxcallable.LoxCallable):
@@ -48,6 +48,12 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def visit_block_stmt(self, statement: stmt.Block) -> None:
         self.execute_block(statement.statements, Environment(self.environment))
+        return None
+    
+    def visit_class_stmt(self, statement: stmt.Class) -> None:
+        self.environment.define(statement.name.lexeme, None)
+        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme)
+        self.environment.assign(statement.name, klass)
         return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
@@ -115,6 +121,16 @@ class Interpreter(expr.Visitor, stmt.Visitor):
                 return left
         
         return self.evaluate(expression.right)
+    
+    def visit_set_expr(self, expression: expr.Set) -> object:
+        objekt: object = self.evaluate(expression.objekt)
+
+        if not isinstance(objeckt, loxinstance.LoxInstance):
+            raise runtimeerror.RuntimeError(expression.name, "Only instances have fields.")
+        
+        value: object = self.evaluate(expression.value)
+        objekt.set(expression.name, value)
+        return value
     
     def visit_grouping_expr(self, expression: expr.Grouping) -> object:
         return self.evaluate(expression.expression)
@@ -201,7 +217,12 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         if len(arguments) != function.arity():
             raise runtimeerror.RuntimeError(expression.paren, f"Expected {function.arity()} arguments but got {len(arguments)}")
         return function.call(self, arguments)
-        
+    
+    def visit_get_expr(self, expression: expr.Get) -> object:
+        objekt: object = self.evaluate(expression.objekt)        
+        if isinstance(objekt, loxinstance.LoxInstance):
+            return objekt.get(expression.name)
+        raise runtimeerror.RuntimeError(expression.name, "Only instances have properties.")
 
     def is_equal(self, a: object, b: object) -> bool:
         if a is None and b is None:

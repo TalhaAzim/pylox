@@ -11,9 +11,11 @@ GRAMMAR = (
         ("Assign", ("name", "Token"), ("value", "Expr")),
         ("Binary", ("left", "Expr"), ("operator", "Token"), ("right", "Expr")),
         ("Call", ("callee", "Expr"), ("paren", "Token"), ("arguments", "list[Expr]")),
+        ("Get", ("objekt", "Expr"), ("name", "Token")),
         ("Grouping", ("expression", "Expr")),
         ("Literal", ("value", "object")),
         ("Logical", ("left", "Expr"), ("operator", "Token"), ("right", "Expr")),
+        ("Set", ("objekt", "Expr"), ("name", "Token"), ("value", "Expr")),
         ("Unary", ("operator", "Token"), ("right", "Expr")),
         ("Variable", ("name", "Token"))
     )),

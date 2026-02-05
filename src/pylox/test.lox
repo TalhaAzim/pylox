@@ -32,3 +32,15 @@ var a = "global";
   var a = "block";
   showA();
 }
+
+class SuperAwesomeServer {
+  runGameFast() {
+    return "so many polygons";
+  }
+}
+
+print SuperAwesomeServer;
+
+class Bagel {}
+var bagel = Bagel();
+print bagel;

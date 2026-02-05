@@ -140,3 +140,9 @@ Completed `Chapter 11 Resolving and Binding`. Test file does not terminated. Nee
 ### 23:14
 
 Started `Chapter 12.2 Class Declarations`. Continue with updates to `Parser.declaration()`. Go slow.
+
+## February 5, 2026
+
+## 13:16
+
+Completed `Chapter 12.4 Properties on Classes`. Continue with `Chapter 12.5 Methods on Classes`.
