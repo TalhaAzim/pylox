@@ -57,7 +57,8 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         for method in statement.methods:
             function: loxfunction.LoxFunction = loxfunction.LoxFunction(
                 method,
-                self.environment
+                self.environment,
+                method.name.lexeme == "init"
             )
             methods[method.name.lexeme] = function
         
@@ -70,7 +71,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_function_stmt(self, statement: stmt.Function) -> None:
-        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement, self.environment)
+        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement, self.environment, False)
         self.environment.define(statement.name.lexeme, function)
         return None
     

@@ -18,7 +18,12 @@ class LoxClass(LoxCallable):
     
     def call(self, interpreter: 'Interpreter', arguments: list[object]) -> object:
         instance: LoxInstance = LoxInstance(self)
+        initializer: LoxFunction = self.find_method("init")
+        
+        if initializer is not None:
+            initializer.bind(instance).call(interpreter, arguments)
         return instance
     
     def arity(self) -> int:
-        return 0
+        initializer: LoxFunction = self.find_method("init")
+        return 0 if initializer is None else initializer.arity()

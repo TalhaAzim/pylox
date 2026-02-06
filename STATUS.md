@@ -150,3 +150,13 @@ Completed `Chapter 12.4 Properties on Classes`. Continue with `Chapter 12.5 Meth
 ## 14:05
 
 Completed `Chapter 12.5 Methods on Classes`. Continue at `Chapter 12.6 This`.
+
+## February 6, 2026
+
+### 13:20
+
+Completed `Chapter 12.6 This`. Continue at `Chapter 12.7 Constructors and Initializers`.
+
+### 14:30
+
+Completed `Chapter 12.7 Constructors and Initializers`. Continue at `Chapter 13 Inheritance`.

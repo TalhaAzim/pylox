@@ -5,14 +5,15 @@ from loxinstance import LoxInstance
 
 class LoxFunction(loxcallable.LoxCallable):
 
-    def __init__(self, declaration: 'stmt.Function', closure: Environment = None) -> None:
+    def __init__(self, declaration: 'stmt.Function', closure: Environment, is_initializer: bool) -> None:
         self.closure = closure
         self.declaration = declaration
+        self.is_initializer = is_initializer
     
     def bind(self, instance: LoxInstance) -> LoxFunction:
         environment: Environment = Environment(self.closure)
         environment.define("this", instance)
-        return LoxFunction(self.declaration, environment)
+        return LoxFunction(self.declaration, environment, self.is_initializer)
     
     def arity(self) -> int:
         return len(self.declaration.params)
@@ -26,7 +27,10 @@ class LoxFunction(loxcallable.LoxCallable):
         try:
             interpreter.execute_block(self.declaration.body, environment)
         except ReturnException as exception:
-            return exception.value
+            return self.closure.get_at(0, "this") if self.is_initializer else exception.value
+        
+        if self.is_initializer:
+            return self.closure.get_at(0, "this")
 
         return None
     

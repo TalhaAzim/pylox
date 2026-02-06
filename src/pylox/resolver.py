@@ -3,7 +3,7 @@ from interpreter import Interpreter
 from token import Token
 from enum import Enum
 
-FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "METHOD"]) 
+FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "INITIALIZER", "METHOD"]) 
 ClassType = Enum("ClassType", ["NONE", "CLASS"])
 
 class Resolver(expr.Visitor, stmt.Visitor):
@@ -32,6 +32,8 @@ class Resolver(expr.Visitor, stmt.Visitor):
 
         for method in statement.methods:
             declaration: FunctionType = FunctionType.METHOD
+            if method.name.lexeme == "init":
+                declaration = FunctionType.INITIALIZER
             self.resolve_function(method, declaration)
         
         self.end_scope()
@@ -62,12 +64,16 @@ class Resolver(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_return_stmt(self, statement: stmt.Return) -> None:
+        from __init__ import Pylox # TODO: fix circular imports
+
         if self.current_function == FunctionType.NONE:
-            from __init__ import Pylox # TODO: fix circular imports
             Pylox.error(statement.keyword, "Can't return from top-level code.")
 
         if not statement.value is None:
+            if self.current_function == FunctionType.INITIALIZER:
+                Pylox.error(statement.keyword, "Can't return a value from an initializer.")
             self.resolve(statement.value)
+
         return None
     
     def resolve(self, statement: list[stmt.Stmt] | stmt.Stmt | expr.Expr) -> None:
