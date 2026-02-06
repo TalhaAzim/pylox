@@ -7,6 +7,8 @@
   packages = with pkgs; [
     claude-code
     opencode
+    ripgrep
+    fd
     (python313.withPackages (pypkgs: with pypkgs; [
       python-lsp-server
     ]))
