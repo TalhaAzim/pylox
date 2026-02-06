@@ -10,7 +10,7 @@ class LoxFunction(loxcallable.LoxCallable):
         self.declaration = declaration
         self.is_initializer = is_initializer
     
-    def bind(self, instance: LoxInstance) -> LoxFunction:
+    def bind(self, instance: LoxInstance) -> 'LoxFunction':
         environment: Environment = Environment(self.closure)
         environment.define("this", instance)
         return LoxFunction(self.declaration, environment, self.is_initializer)
