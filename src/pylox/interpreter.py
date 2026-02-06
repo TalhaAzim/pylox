@@ -51,6 +51,13 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_class_stmt(self, statement: stmt.Class) -> None:
+        superclass: object = None
+        if statement.superclass is not None:
+            superclass = self.evaluate(statement.superclass)
+
+            if not isinstance(superclass, loxclass.LoxClass):
+                raise runtimeerror.RuntimeError(statement.superclass.name, "Superclass must be a class.")
+
         self.environment.define(statement.name.lexeme, None)
 
         methods: dict[str, loxfunction.LoxFunction] = {}
@@ -62,7 +69,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             )
             methods[method.name.lexeme] = function
         
-        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, methods)
+        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, superclass, methods) # Java implementation casts superclass, Python cheats with duck typing
         self.environment.assign(statement.name, klass)
         return None
     

@@ -22,7 +22,7 @@ GRAMMAR = (
     )),
     ("Stmt", (
         ("Block", ("statements", "list[Stmt]")),
-        ("Class", ("name", "Token"), ("methods", "list[stmt.Function]")),
+        ("Class", ("name", "Token"), ("superclass", "Variable"), ("methods", "list[stmt.Function]")),
         ("Expression", ("expression", "Expr")),
         ("Function", ("name", "Token"), ("params", "list[Token]"), ("body", "list[Stmt]")),
         ("If", ("condition", "Expr"), ("then_branch", "Stmt"), ("else_branch", "Stmt")),

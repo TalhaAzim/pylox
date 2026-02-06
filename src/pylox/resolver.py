@@ -26,6 +26,13 @@ class Resolver(expr.Visitor, stmt.Visitor):
         
         self.declare(statement.name)
         self.define(statement.name)
+
+        if statement.superclass is not None and statement.name.lexeme == statement.superclass.name.lexeme:
+            from __init__ import Pylox # TODO: Surprise surprise, circular import hack
+            Pylox.error(statement.superclass.name, "A class can't inherit from itself.")
+        
+        if (statement.superclass is not None):
+            self.resolve(statement.superclass)
         
         self.begin_scope()
         self.scopes[-1]["this"] = True

@@ -45,3 +45,29 @@ print SuperAwesomeServer().runGameFast();
 class Bagel {}
 var bagel = Bagel();
 print bagel;
+
+// Test inheritance (Chapter 13.2)
+class Animal {
+  speak() {
+    return "Some sound";
+  }
+}
+
+class Dog < Animal {
+  bark() {
+    return "Woof!";
+  }
+}
+
+var dog = Dog();
+print dog.speak(); // Should print "Some sound" (inherited method)
+print dog.bark();  // Should print "Woof!" (own method)
+
+class Cat < Animal {
+  speak() {
+    return "Meow!";
+  }
+}
+
+var cat = Cat();
+print cat.speak(); // Should print "Meow!" (overridden method)

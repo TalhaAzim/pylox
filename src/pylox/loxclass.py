@@ -4,15 +4,20 @@ from loxinstance import LoxInstance
 
 class LoxClass(LoxCallable):
 
-    def __init__(self, name: str, methods: dict[str, LoxFunction]) -> None:
+    def __init__(self, name: str, superclass: LoxClass, methods: dict[str, LoxFunction]) -> None:
         self.name = name
         self.methods = methods
+        self.superclass = superclass
     
-    def find_method(self, name: str) -> LoxFunction:
+    def find_method(self, name: str) -> LoxFunction | None:
         if name in self.methods:
             return self.methods[name]
-        return None
+
+        if self.superclass is not None:
+            return self.superclass.find_method(name)
     
+        return None
+
     def __str__(self) -> str:
         return self.name
     

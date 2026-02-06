@@ -17,8 +17,9 @@ class Block(Stmt):
 
 class Class(Stmt):
 
-    def __init__(self, name: Token, methods: 'list[stmt.Function]') -> None:
+    def __init__(self, name: Token, superclass: 'Variable', methods: 'list[stmt.Function]') -> None:
         self.name: Token = name
+        self.superclass: 'Variable' = superclass
         self.methods: 'list[stmt.Function]' = methods
 
     def accept(self, visitor: 'Visitor') -> None:
