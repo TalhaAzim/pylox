@@ -20,7 +20,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
     
     def visit_class_stmt(self, statement: stmt.Class) -> None:
         self.declare(statement.name)
-        self.declare(statement.name)
+        self.define(statement.name)
 
         for method in statement.methods:
             declaration: FunctionType = FunctionType.METHOD

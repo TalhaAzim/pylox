@@ -187,7 +187,7 @@ class Parser:
                 return expr.Assign(name, value)
             elif isinstance(expression, expr.Get):
                 get: expr.Get = expression # TODO: not really necessary, duck typing ftw (for now)
-                return expr.Set(get.objekt, get.name, get.value)
+                return expr.Set(get.objekt, get.name, value)
             
             self.error(equals, "Invalid assignment target.")
         

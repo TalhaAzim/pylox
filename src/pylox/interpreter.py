@@ -134,7 +134,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def visit_set_expr(self, expression: expr.Set) -> object:
         objekt: object = self.evaluate(expression.objekt)
 
-        if not isinstance(objeckt, loxinstance.LoxInstance):
+        if not isinstance(objekt, loxinstance.LoxInstance):
             raise runtimeerror.RuntimeError(expression.name, "Only instances have fields.")
         
         value: object = self.evaluate(expression.value)
@@ -250,6 +250,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             text: str = str(obj)
             if text.endswith(".0"):
                 text = text[:-2]
+            return text
 
         return str(obj)
 
