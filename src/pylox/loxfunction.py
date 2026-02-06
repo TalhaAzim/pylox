@@ -1,12 +1,18 @@
 import loxcallable
 from environment import Environment
 from returnexception import ReturnException
+from loxinstance import LoxInstance
 
 class LoxFunction(loxcallable.LoxCallable):
 
     def __init__(self, declaration: 'stmt.Function', closure: Environment = None) -> None:
         self.closure = closure
         self.declaration = declaration
+    
+    def bind(self, instance: LoxInstance) -> LoxFunction:
+        environment: Environment = Environment(self.closure)
+        environment.define("this", instance)
+        return LoxFunction(self.declaration, environment)
     
     def arity(self) -> int:
         return len(self.declaration.params)

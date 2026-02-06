@@ -4,6 +4,7 @@ from token import Token
 from enum import Enum
 
 FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "METHOD"]) 
+ClassType = Enum("ClassType", ["NONE", "CLASS"])
 
 class Resolver(expr.Visitor, stmt.Visitor):
 
@@ -11,6 +12,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
         self.interpreter = interpreter
         self.scopes = []
         self.current_function = FunctionType.NONE
+        self.current_class = ClassType.NONE
     
     def visit_block_stmt(self, statement: stmt.Block) -> None:
         self.begin_scope()
@@ -19,13 +21,22 @@ class Resolver(expr.Visitor, stmt.Visitor):
         return None 
     
     def visit_class_stmt(self, statement: stmt.Class) -> None:
+        enclosing_class: ClassType = self.current_class
+        self.current_class = ClassType.CLASS
+        
         self.declare(statement.name)
         self.define(statement.name)
+        
+        self.begin_scope()
+        self.scopes[-1]["this"] = True
 
         for method in statement.methods:
             declaration: FunctionType = FunctionType.METHOD
             self.resolve_function(method, declaration)
+        
+        self.end_scope()
 
+        self.current_class = enclosing_class
         return None
     
     def visit_expression_stmt(self, statement: stmt.Expression) -> None:
@@ -170,6 +181,15 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def visit_set_expr(self, expression: expr.Set) -> None:
         self.resolve(expression.value)
         self.resolve(expression.objekt)        
+        return None
+    
+    def visit_this_expr(self, expression: expr.This) -> None:
+        if self.current_class == ClassType.NONE:
+            from __init__ import Pylox # TODO: circular import... again...
+            Pylox.error(expression.keyword, "Can't use 'this' outside of a class.")
+            return None
+
+        self.resolve_local(expression, expression.keyword)
         return None
 
     def visit_unary_expr(self, expression: expr.Unary) -> None:

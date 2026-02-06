@@ -141,6 +141,9 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         objekt.set(expression.name, value)
         return value
     
+    def visit_this_expr(self, expression: expr.This) -> object:
+        return self.lookup_variable(expression.keyword, expression)
+    
     def visit_grouping_expr(self, expression: expr.Grouping) -> object:
         return self.evaluate(expression.expression)
     

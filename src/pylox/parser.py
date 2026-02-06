@@ -332,6 +332,9 @@ class Parser:
         if self.match(TokenType.IDENTIFIER):
             return expr.Variable(self.previous())
         
+        if self.match(TokenType.THIS):
+            return expr.This(self.previous())
+        
         if self.match(TokenType.LEFT_PAREN):
             expression: expr.Expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
