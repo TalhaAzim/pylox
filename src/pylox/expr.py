@@ -81,6 +81,15 @@ class Set(Expr):
     def accept(self, visitor: 'Visitor') -> None:
         return visitor.visit_set_expr(self)
 
+class Super(Expr):
+
+    def __init__(self, keyword: Token, method: Token) -> None:
+        self.keyword: Token = keyword
+        self.method: Token = method
+
+    def accept(self, visitor: 'Visitor') -> None:
+        return visitor.visit_super_expr(self)
+
 class This(Expr):
 
     def __init__(self, keyword: Token) -> None:
@@ -138,6 +147,10 @@ class Visitor(ABC):
 
     @abstractmethod
     def visit_set_expr(self, expr: 'Set') -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_super_expr(self, expr: 'Super') -> None:
         raise NotImplementedError
 
     @abstractmethod

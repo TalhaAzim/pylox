@@ -31,8 +31,12 @@ class Resolver(expr.Visitor, stmt.Visitor):
             from __init__ import Pylox # TODO: Surprise surprise, circular import hack
             Pylox.error(statement.superclass.name, "A class can't inherit from itself.")
         
-        if (statement.superclass is not None):
+        if statement.superclass is not None:
             self.resolve(statement.superclass)
+        
+        if statement.superclass is not None:
+            self.begin_scope()
+            self.scopes[-1]["super"] = True
         
         self.begin_scope()
         self.scopes[-1]["this"] = True
@@ -44,6 +48,9 @@ class Resolver(expr.Visitor, stmt.Visitor):
             self.resolve_function(method, declaration)
         
         self.end_scope()
+
+        if statement.superclass is not None:
+            self.end_scope()
 
         self.current_class = enclosing_class
         return None
@@ -194,6 +201,10 @@ class Resolver(expr.Visitor, stmt.Visitor):
     def visit_set_expr(self, expression: expr.Set) -> None:
         self.resolve(expression.value)
         self.resolve(expression.objekt)        
+        return None
+
+    def visit_super_expr(self, expression: expr.Super) -> None:
+        self.resolve_local(expression, expression.keyword)
         return None
     
     def visit_this_expr(self, expression: expr.This) -> None:

@@ -60,6 +60,10 @@ class Interpreter(expr.Visitor, stmt.Visitor):
 
         self.environment.define(statement.name.lexeme, None)
 
+        if statement.superclass is not None:
+            self.environment = environment.Environment(self.environment)
+            self.environment.define("super", superclass)
+
         methods: dict[str, loxfunction.LoxFunction] = {}
         for method in statement.methods:
             function: loxfunction.LoxFunction = loxfunction.LoxFunction(
@@ -70,6 +74,10 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             methods[method.name.lexeme] = function
         
         klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, superclass, methods) # Java implementation casts superclass, Python cheats with duck typing
+
+        if superclass is not None:
+            self.environment = environment.enclosing
+        
         self.environment.assign(statement.name, klass)
         return None
     
@@ -148,6 +156,19 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         value: object = self.evaluate(expression.value)
         objekt.set(expression.name, value)
         return value
+    
+    def visit_super_expr(expression: expr.Super) -> object:
+        distance: int = self.locals.get(expression)
+        superclass: loxclass.LoxClass = self.environment.get_at(distance, "super")
+
+        objekt: loxclass.LoxInstance = self.environment.get_at(distance - 1, "this")
+
+        method: loxfunction.LoxFunction = superclass.find_method(expression.method.lexeme)
+
+        if method is None:
+            raise runtimeerror.RuntimeError(expression.method, f"Undefined property '{expression.method.lexeme}'.")
+
+        return method.bind(objekt)
     
     def visit_this_expr(self, expression: expr.This) -> object:
         return self.lookup_variable(expression.keyword, expression)
