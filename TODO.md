@@ -2,12 +2,47 @@
 
 This document outlines a comprehensive refactoring plan to transform the current 1:1 Java port of the Lox interpreter into idiomatic, maintainable Python code with a focus on **modular components** and **instance-based architecture** that can be swapped out for learning and experimentation purposes, including the ability to run multiple interpreter instances.
 
-## Phase 0: Instance-Based Architecture Refactoring
+## Phase 0: Critical Bug Fixes
+
+**Fix interpreter crashes on parse errors:**
+
+### Critical Error Handling Bug
+The interpreter crashes with `AttributeError: 'NoneType' object has no attribute 'accept'` when encountering parse errors in both REPL and script execution modes.
+
+**Root Cause**: 
+- Circular imports cause `Pylox` class to be imported multiple times with different IDs
+- `Pylox.had_error` is set in one import context but checked in another
+- The check `if Pylox.had_error: return` never triggers because it references a different class object
+- Parser returns `None` for failed declarations, which get passed to the resolver
+- Resolver crashes when calling `.accept()` on `None` values
+
+**Impact**:
+- Scripts with syntax errors crash instead of showing error message and exiting with code 65
+- REPL crashes on any invalid input instead of continuing to the next prompt
+- All error handling is fundamentally broken
+
+**Fix Required**:
+1. **Temporary Workaround** (Immediate): Pass `_pylox` kwarg to Parser, Scanner, and Resolver
+   - Use keyword-only argument `*, _pylox=None` to indicate temporary implementation detail
+   - Store as instance property `self._pylox = _pylox or Pylox`
+   - Replace all `Pylox.error()` calls with `self._pylox.error()`
+   - This ensures all components reference the same Pylox class object
+   - Will be removed during Phase 0.5 refactoring
+
+2. **Defensive Programming**: Filter out `None` values from statements list before passing to resolver
+   - Add null-checking in resolver's `resolve()` method
+   - Prevents crashes even if error handling fails
+
+3. **Proper Fix**: Refactor to instance-based architecture (Phase 0.5)
+
+## Phase 0.5: Instance-Based Architecture Refactoring
 
 **Convert from Java-like static/class-based to Pythonic instance-based design:**
 
 ### Current State Analysis
 - **Pylox class**: All methods are `@staticmethod`, variables are class-level (singleton pattern)
+- **Circular imports**: Multiple modules import `Pylox` from `__init__`, creating different class objects
+- **Error state**: `had_error` doesn't propagate correctly due to circular import issues
 - **Scanner**: `keywords` dictionary is a class variable shared across instances
 - **Token**: `TOKENS` list is module-level, global state
 - **Tool**: All methods are static, acts like a utility namespace

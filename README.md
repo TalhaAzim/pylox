@@ -106,11 +106,24 @@ See [`TODO.md`](TODO.md) for the complete refactoring roadmap.
 
 ## Known Issues
 
-The current codebase has some critical bugs that need fixing before the refactoring phase (see TODO.md Phase 0):
-- Undefined variables in `interpreter.py`
-- Method name mismatches
-- Attribute reference errors
-- Undefined variables in resolver
+### Critical Bug: Error Handling Broken
+**Status**: 🔴 High Priority - Affects all error handling
+
+The interpreter **crashes** when encountering parse errors instead of gracefully reporting them:
+- **REPL**: Crashes on invalid input instead of continuing to next prompt
+- **Scripts**: Crash with `AttributeError` instead of showing error and exiting with code 65
+
+**Root Cause**: Circular imports cause `Pylox.had_error` to be set in one module context but checked in another, preventing the error check from ever triggering. Parser returns `None` for failed declarations, which then crash the resolver.
+
+**Workaround**: Ensure all code is syntactically valid before running.
+
+**Fix**: See TODO.md Phase 0 for detailed fix plan.
+
+### Other Issues
+The current codebase has additional bugs that need fixing (see TODO.md):
+- Circular import issues throughout codebase
+- Static/class-based architecture needs refactoring to instance-based
+- Type annotation errors and forward reference issues
 
 ## Resources
 
