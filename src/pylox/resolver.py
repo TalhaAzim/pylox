@@ -4,7 +4,7 @@ from token import Token
 from enum import Enum
 
 FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "INITIALIZER", "METHOD"]) 
-ClassType = Enum("ClassType", ["NONE", "CLASS"])
+ClassType = Enum("ClassType", ["NONE", "CLASS", "SUBCLASS"])
 
 class Resolver(expr.Visitor, stmt.Visitor):
 
@@ -32,6 +32,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
             Pylox.error(statement.superclass.name, "A class can't inherit from itself.")
         
         if statement.superclass is not None:
+            self.current_class = ClassType.SUBCLASS
             self.resolve(statement.superclass)
         
         if statement.superclass is not None:
@@ -204,6 +205,13 @@ class Resolver(expr.Visitor, stmt.Visitor):
         return None
 
     def visit_super_expr(self, expression: expr.Super) -> None:
+        if self.current_class == ClassType.NONE:
+            from __init__ import Pylox # TODO: fix circular import issue
+            Pylox.error(expression.keyword, "Can't use 'super' outside of a class.")
+        elif self.current_class != ClassType.SUBCLASS:
+            from __init__ import Pylox # TODO: fix circular import issue, again...
+            Pylox.error(expression.keyword, "Can't use 'super' in a class with no superclass.")
+        
         self.resolve_local(expression, expression.keyword)
         return None
     

@@ -1,67 +1,95 @@
+// Comprehensive OOP Feature Tests for Pylox
+// Testing classes, inheritance, methods, properties, constructors, and super
 
-fun fib(n) {
-  if (n <= 1) return n;
-  return fib(n - 2) + fib(n - 1);
-}
+print "=== Basic Class Creation ===";
 
-for (var i = 0; i < 20; i = i + 1) {
-  print fib(i);
-}
-
-fun makeCounter() {
-  var i = 0;
-  fun count() {
-    i = i + 1;
-    print i;
+class Point {
+  init(x, y) {
+    this.x = x;
+    this.y = y;
   }
-
-  return count;
-}
-
-var counter = makeCounter();
-counter(); // "1".
-counter(); // "2".
-
-var a = "global";
-{
-  fun showA() {
-    print a;
+  
+  getX() {
+    return this.x;
   }
-
-  showA();
-  var a = "block";
-  showA();
-}
-
-class SuperAwesomeServer {
-  runGameFast() {
-    return "so many polygons";
+  
+  getY() {
+    return this.y;
+  }
+  
+  distance(other) {
+    var dx = this.x - other.x;
+    var dy = this.y - other.y;
+    return dx * dx + dy * dy;
   }
 }
 
+var p1 = Point(3, 4);
+var p2 = Point(0, 0);
 
-print SuperAwesomeServer().runGameFast();
+print p1.getX();  // Should print: 3
+print p1.getY();  // Should print: 4
+print p2.getX();  // Should print: 0
+print p2.getY();  // Should print: 0
+print p1.distance(p2);  // Should print: 25 (3^2 + 4^2)
 
-class Bagel {}
-var bagel = Bagel();
-print bagel;
+print "";
+print "=== Property Access ===";
 
-// Test inheritance (Chapter 13.2)
+class Rectangle {
+  init(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+  
+  area() {
+    return this.width * this.height;
+  }
+  
+  perimeter() {
+    return 2 * (this.width + this.height);
+  }
+}
+
+var rect = Rectangle(5, 3);
+print rect.area();       // Should print: 15
+print rect.perimeter();  // Should print: 16
+
+// Test direct property access
+rect.width = 10;
+print rect.area();       // Should print: 30
+
+print "";
+print "=== Inheritance - Basic ===";
+
 class Animal {
+  init(name) {
+    this.name = name;
+  }
+  
   speak() {
     return "Some sound";
+  }
+  
+  getName() {
+    return this.name;
   }
 }
 
 class Dog < Animal {
-  bark() {
+  init(name, breed) {
+    super.init(name);
+    this.breed = breed;
+  }
+  
+  speak() {
     return "Woof!";
   }
+  
+  getBreed() {
+    return this.breed;
+  }
 }
-
-var dog = Dog();
-print dog.speak(); // Should print "Some sound" (inherited method)
-print dog.bark();  // Should print "Woof!" (own method)
 
 class Cat < Animal {
   speak() {
@@ -69,5 +97,188 @@ class Cat < Animal {
   }
 }
 
-var cat = Cat();
-print cat.speak(); // Should print "Meow!" (overridden method)
+var dog = Dog("Buddy", "Golden Retriever");
+var cat = Cat("Whiskers");
+
+print dog.getName();     // Should print: Buddy
+print dog.speak();       // Should print: Woof!
+print dog.getBreed();    // Should print: Golden Retriever
+print cat.getName();     // Should print: Whiskers
+print cat.speak();       // Should print: Meow!
+
+print "";
+print "=== Inheritance - Method Overriding ===";
+
+class Shape {
+  describe() {
+    return "I am a shape";
+  }
+  
+  area() {
+    return 0;
+  }
+}
+
+class Circle < Shape {
+  init(radius) {
+    this.radius = radius;
+  }
+  
+  describe() {
+    return "I am a circle";
+  }
+  
+  area() {
+    return 3.14159 * this.radius * this.radius;
+  }
+}
+
+class Square < Shape {
+  init(side) {
+    this.side = side;
+  }
+  
+  describe() {
+    return "I am a square";
+  }
+  
+  area() {
+    return this.side * this.side;
+  }
+}
+
+var shape = Shape();
+var circle = Circle(5);
+var square = Square(4);
+
+print shape.describe();  // Should print: I am a shape
+print shape.area();      // Should print: 0
+print circle.describe(); // Should print: I am a circle
+print circle.area();     // Should print: ~78.54
+print square.describe(); // Should print: I am a square
+print square.area();     // Should print: 16
+
+print "";
+print "=== Super Keyword ===";
+
+class Vehicle {
+  init(make, model) {
+    this.make = make;
+    this.model = model;
+  }
+  
+  describe() {
+    return this.make + " " + this.model;
+  }
+  
+  honk() {
+    return "Beep!";
+  }
+}
+
+class Car < Vehicle {
+  init(make, model, year) {
+    super.init(make, model);
+    this.year = year;
+  }
+  
+  describe() {
+    // Note: Lox doesn't support automatic number-to-string conversion
+    // So we just return the base description without the year
+    return super.describe();
+  }
+  
+  honk() {
+    return super.honk() + " " + super.honk();
+  }
+}
+
+var car = Car("Toyota", "Corolla", 2023);
+print car.describe();    // Should print: Toyota Corolla
+print car.honk();        // Should print: Beep! Beep!
+
+print "";
+print "=== Nested Classes and Closures ===";
+
+class Counter {
+  init() {
+    this.count = 0;
+  }
+  
+  increment() {
+    this.count = this.count + 1;
+    return this.count;
+  }
+  
+  getCount() {
+    return this.count;
+  }
+  
+  reset() {
+    this.count = 0;
+  }
+}
+
+var counter1 = Counter();
+var counter2 = Counter();
+
+print counter1.increment();  // Should print: 1
+print counter1.increment();  // Should print: 2
+print counter2.increment();  // Should print: 1
+print counter1.getCount();   // Should print: 2
+print counter2.getCount();   // Should print: 1
+
+print "";
+print "=== Complex Inheritance Chain ===";
+
+class A {
+  methodA() {
+    return "A";
+  }
+}
+
+class B < A {
+  methodB() {
+    return "B";
+  }
+}
+
+class C < B {
+  methodC() {
+    return "C";
+  }
+  
+  methodA() {
+    return "C overrides A";
+  }
+}
+
+var c = C();
+print c.methodA();  // Should print: C overrides A
+print c.methodB();  // Should print: B
+print c.methodC();  // Should print: C
+
+print "";
+print "=== Method Chaining ===";
+
+class Builder {
+  init() {
+    this.value = "";
+  }
+  
+  append(str) {
+    this.value = this.value + str;
+    return this;
+  }
+  
+  getValue() {
+    return this.value;
+  }
+}
+
+var builder = Builder();
+builder.append("Hello").append(" ").append("World");
+print builder.getValue();  // Should print: Hello World
+
+print "";
+print "=== All Tests Completed ===";

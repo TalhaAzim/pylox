@@ -4,7 +4,7 @@ from loxinstance import LoxInstance
 
 class LoxClass(LoxCallable):
 
-    def __init__(self, name: str, superclass: LoxClass, methods: dict[str, LoxFunction]) -> None:
+    def __init__(self, name: str, superclass: 'LoxClass', methods: dict[str, LoxFunction]) -> None:
         self.name = name
         self.methods = methods
         self.superclass = superclass

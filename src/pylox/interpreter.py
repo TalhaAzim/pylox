@@ -61,7 +61,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         self.environment.define(statement.name.lexeme, None)
 
         if statement.superclass is not None:
-            self.environment = environment.Environment(self.environment)
+            self.environment = Environment(self.environment)
             self.environment.define("super", superclass)
 
         methods: dict[str, loxfunction.LoxFunction] = {}
@@ -76,7 +76,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, superclass, methods) # Java implementation casts superclass, Python cheats with duck typing
 
         if superclass is not None:
-            self.environment = environment.enclosing
+            self.environment = self.environment.enclosing
         
         self.environment.assign(statement.name, klass)
         return None
@@ -157,7 +157,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         objekt.set(expression.name, value)
         return value
     
-    def visit_super_expr(expression: expr.Super) -> object:
+    def visit_super_expr(self, expression: expr.Super) -> object:
         distance: int = self.locals.get(expression)
         superclass: loxclass.LoxClass = self.environment.get_at(distance, "super")
 
