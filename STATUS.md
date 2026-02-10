@@ -160,3 +160,12 @@ Completed `Chapter 12.6 This`. Continue at `Chapter 12.7 Constructors and Initia
 ### 01:10
 
 Completed `Chapter 12.7 Constructors and Initializers`. Continue at `Chapter 13 Inheritance`.
+
+## February 10, 2026
+
+### 00:15
+
+All chapters implemented. One critical bug keeping from full implementation: `had_error` does
+not pass through to main Pylox class due to the hack for getting around the circular import.
+`had_error` passes to a Pylox class with a different id. Bug from day 1. Kind of funny if you
+think about it.
