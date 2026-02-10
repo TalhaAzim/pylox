@@ -5,6 +5,7 @@
   channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
+    gnumake
     claude-code
     opencode
     ripgrep
