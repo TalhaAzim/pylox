@@ -1,7 +1,9 @@
 from token import Token, TokenType
-from __init__ import Pylox
+# from __init__ import Pylox
 
 class Scanner:
+
+    runtime = None
 
     keywords = {
         "and": TokenType.AND,
@@ -72,7 +74,7 @@ class Scanner:
                 elif (c.isalpha() or c == '_'):
                     self.identifier()
                 else:
-                    Pylox.error(self.line, "Unexpected character.")
+                    Scanner.runtime.error(self.line, "Unexpected character.")
 
     def identifier(self) -> None:
         while True:
@@ -123,7 +125,7 @@ class Scanner:
             self.advance()
         
         if self.is_at_end():
-            Pylox.error(self.line, "Unterminated string.")
+            Scanner.runtime.error(self.line, "Unterminated string.")
             return
         
         self.advance()

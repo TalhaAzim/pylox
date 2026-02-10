@@ -1,9 +1,10 @@
 from token import TokenType, Token
 import expr
 import stmt
-from __init__ import Pylox
 
 class Parser:
+
+    runtime = None
     
     class ParseError(Exception):
         pass
@@ -362,7 +363,7 @@ class Parser:
     
     @staticmethod
     def error(token: Token, message: str) -> "Parser.ParseError":
-        Pylox.error(token, message)
+        Parser.runtime.error(token, message)
         return Parser.ParseError()
     
     def synchronize(self) -> None:

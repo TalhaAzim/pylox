@@ -1,7 +1,6 @@
 import expr
 import stmt
 from token import TokenType, Token
-from __init__ import Pylox
 import runtimeerror
 from returnexception import ReturnException
 from environment import Environment
@@ -20,6 +19,8 @@ class Clock(loxcallable.LoxCallable):
         return "<native fn>"
 
 class Interpreter(expr.Visitor, stmt.Visitor):
+
+    runtime = None
 
     def __init__(self) -> None:
         self.globals = Environment()
@@ -301,4 +302,4 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             for statement in statements:
                 self.execute(statement)
         except RuntimeError as error:
-            Pylox.runtime_error(error)
+            Interpreter.runtime.runtime_error(error)

@@ -2,11 +2,11 @@
 
 This document outlines a comprehensive refactoring plan to transform the current 1:1 Java port of the Lox interpreter into idiomatic, maintainable Python code with a focus on **modular components** and **instance-based architecture** that can be swapped out for learning and experimentation purposes, including the ability to run multiple interpreter instances.
 
-## Phase 0: Critical Bug Fixes
+## Phase 0: Critical Bug Fixes ✅ COMPLETED
 
 **Fix interpreter crashes on parse errors:**
 
-### Critical Error Handling Bug
+### Critical Error Handling Bug - RESOLVED
 The interpreter crashes with `AttributeError: 'NoneType' object has no attribute 'accept'` when encountering parse errors in both REPL and script execution modes.
 
 **Root Cause**: 
@@ -21,19 +21,38 @@ The interpreter crashes with `AttributeError: 'NoneType' object has no attribute
 - REPL crashes on any invalid input instead of continuing to the next prompt
 - All error handling is fundamentally broken
 
-**Fix Required**:
-1. **Temporary Workaround** (Immediate): Pass `_pylox` kwarg to Parser, Scanner, and Resolver
-   - Use keyword-only argument `*, _pylox=None` to indicate temporary implementation detail
-   - Store as instance property `self._pylox = _pylox or Pylox`
-   - Replace all `Pylox.error()` calls with `self._pylox.error()`
-   - This ensures all components reference the same Pylox class object
-   - Will be removed during Phase 0.5 refactoring
+**Solution Implemented** (February 10, 2026):
+Instead of the planned `_pylox` kwarg workaround, a cleaner solution was implemented:
 
-2. **Defensive Programming**: Filter out `None` values from statements list before passing to resolver
-   - Add null-checking in resolver's `resolve()` method
-   - Prevents crashes even if error handling fails
+1. **Class-level imports inside Pylox class**: Moved imports from module level to class body in `__init__.py`
+   ```python
+   class Pylox:
+       from scanner import Scanner
+       from parser import Parser
+       from resolver import Resolver
+       from interpreter import Interpreter
+   ```
 
-3. **Proper Fix**: Refactor to instance-based architecture (Phase 0.5)
+2. **Runtime reference injection**: Each component gets a `runtime` class attribute pointing to Pylox
+   ```python
+   Pylox.Scanner.runtime = Pylox
+   Pylox.Parser.runtime = Pylox
+   Pylox.Resolver.runtime = Pylox
+   Pylox.Interpreter.runtime = Pylox
+   ```
+
+3. **Replaced direct Pylox imports**: All components now use `Component.runtime` instead of importing Pylox
+   - Removed all `from __init__ import Pylox` statements
+   - Replaced `Pylox.error()` calls with `Component.runtime.error()`
+
+**Why this solution is better than the planned workaround:**
+- Minimal code changes - only modified import locations and error calls
+- No changes to function signatures or constructor parameters
+- Cleaner than passing `_pylox` kwargs throughout the codebase
+- Maintains the 1:1 Java port structure while fixing the circular import
+- All error handling now works correctly with a single Pylox class object
+
+**Note**: This is still a temporary fix for the 1:1 Java port. The proper long-term solution is Phase 0.5 (instance-based architecture).
 
 ## Phase 0.5: Instance-Based Architecture Refactoring
 

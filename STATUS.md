@@ -169,3 +169,11 @@ All chapters implemented. One critical bug keeping from full implementation: `ha
 not pass through to main Pylox class due to the hack for getting around the circular import.
 `had_error` passes to a Pylox class with a different id. Bug from day 1. Kind of funny if you
 think about it.
+
+### 10:47
+
+Circular import issue resolved. Learned difference between Java and Python class declaration
+and resolution. Solution is hack-ish, but for 1:1 java-to-python port, it makes the most sense.
+Time to proceed to refactor. Remaining circular imports mostly relate to typing annotations.
+
+Reference implementation complete...

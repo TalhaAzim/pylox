@@ -4,6 +4,10 @@ import stmt
 from token import Token, TokenType
 
 class Pylox:
+    from scanner import Scanner
+    from parser import Parser
+    from resolver import Resolver
+    from interpreter import Interpreter
 
     had_error = False
     had_runtime_error = False
@@ -14,6 +18,11 @@ class Pylox:
     
     @staticmethod
     def main(args: list[str]) -> None:
+        Pylox.Scanner.runtime = Pylox
+        Pylox.Parser.runtime = Pylox
+        Pylox.Resolver.runtime = Pylox
+        Pylox.Interpreter.runtime = Pylox
+
         if len(args) > 1:
             print("Usage: pylox [script]")
             sys.exit(64)
@@ -45,24 +54,23 @@ class Pylox:
     @staticmethod
     def run(source: str) -> None:
         # Importing scanner, parser, and interpreter here to avoid circular import
-        from scanner import Scanner
-        from parser import Parser
+        # from scanner import Scanner
+        # from parser import Parser
 
-        scanner: Scanner = Scanner(source)
+        scanner: Pylox.Scanner = Pylox.Scanner(source)
         tokens: list[Token] = scanner.scan_tokens()
 
         if Pylox.interpreter is None:
             from interpreter import Interpreter
             Pylox.interpreter = Interpreter()
 
-        parser: Parser = Parser(tokens)
+        parser: Pylox.Parser = Pylox.Parser(tokens)
         statements: list[stmt.Stmt] = parser.parse()
 
         if Pylox.had_error:
             return
         
-        from resolver import Resolver
-        resolver: Resolver = Resolver(Pylox.interpreter)
+        resolver: Pylox.Resolver = Pylox.Resolver(Pylox.interpreter)
         resolver.resolve(statements)
        
         if Pylox.had_error:
