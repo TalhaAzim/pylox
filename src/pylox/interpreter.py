@@ -4,10 +4,10 @@ from tokens import TokenType, Token
 import runtimeerror
 from returnexception import ReturnException
 from environment import Environment
-import loxcallable, loxfunction, loxclass, loxinstance
+import loxobjects
 import time
 
-class Clock(loxcallable.LoxCallable):
+class Clock(loxobjects.LoxCallable):
 
     def arity(self) -> int:
         return 0
@@ -56,7 +56,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         if statement.superclass is not None:
             superclass = self.evaluate(statement.superclass)
 
-            if not isinstance(superclass, loxclass.LoxClass):
+            if not isinstance(superclass, loxobjects.LoxClass):
                 raise runtimeerror.RuntimeError(statement.superclass.name, "Superclass must be a class.")
 
         self.environment.define(statement.name.lexeme, None)
@@ -65,16 +65,16 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             self.environment = Environment(self.environment)
             self.environment.define("super", superclass)
 
-        methods: dict[str, loxfunction.LoxFunction] = {}
+        methods: dict[str, loxobjects.LoxFunction] = {}
         for method in statement.methods:
-            function: loxfunction.LoxFunction = loxfunction.LoxFunction(
+            function: loxobjects.LoxFunction = loxobjects.LoxFunction(
                 method,
                 self.environment,
                 method.name.lexeme == "init"
             )
             methods[method.name.lexeme] = function
         
-        klass: loxclass.LoxClass = loxclass.LoxClass(statement.name.lexeme, superclass, methods) # Java implementation casts superclass, Python cheats with duck typing
+        klass: loxobjects.LoxClass = loxobjects.LoxClass(statement.name.lexeme, superclass, methods) # Java implementation casts superclass, Python cheats with duck typing
 
         if superclass is not None:
             self.environment = self.environment.enclosing
@@ -87,7 +87,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         return None
     
     def visit_function_stmt(self, statement: stmt.Function) -> None:
-        function: loxfunction.LoxFunction = loxfunction.LoxFunction(statement, self.environment, False)
+        function: loxobjects.LoxFunction = loxobjects.LoxFunction(statement, self.environment, False)
         self.environment.define(statement.name.lexeme, function)
         return None
     
@@ -151,7 +151,7 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     def visit_set_expr(self, expression: expr.Set) -> object:
         objekt: object = self.evaluate(expression.objekt)
 
-        if not isinstance(objekt, loxinstance.LoxInstance):
+        if not isinstance(objekt, loxobjects.LoxInstance):
             raise runtimeerror.RuntimeError(expression.name, "Only instances have fields.")
         
         value: object = self.evaluate(expression.value)
@@ -160,11 +160,11 @@ class Interpreter(expr.Visitor, stmt.Visitor):
     
     def visit_super_expr(self, expression: expr.Super) -> object:
         distance: int = self.locals.get(expression)
-        superclass: loxclass.LoxClass = self.environment.get_at(distance, "super")
+        superclass: loxobjects.LoxClass = self.environment.get_at(distance, "super")
 
-        objekt: loxclass.LoxInstance = self.environment.get_at(distance - 1, "this")
+        objekt: loxobjects.LoxInstance = self.environment.get_at(distance - 1, "this")
 
-        method: loxfunction.LoxFunction = superclass.find_method(expression.method.lexeme)
+        method: loxobjects.LoxFunction = superclass.find_method(expression.method.lexeme)
 
         if method is None:
             raise runtimeerror.RuntimeError(expression.method, f"Undefined property '{expression.method.lexeme}'.")
@@ -252,17 +252,17 @@ class Interpreter(expr.Visitor, stmt.Visitor):
         for argument in expression.arguments:
             arguments.append(self.evaluate(argument))
         
-        if not isinstance(callee, loxcallable.LoxCallable):
+        if not isinstance(callee, loxobjects.LoxCallable):
             raise runtimeerror.RuntimeError(expression.paren, "Can only call functions and classes.")
 
-        function: loxcallable.LoxCallable = callee
+        function: loxobjects.LoxCallable = callee
         if len(arguments) != function.arity():
             raise runtimeerror.RuntimeError(expression.paren, f"Expected {function.arity()} arguments but got {len(arguments)}")
         return function.call(self, arguments)
     
     def visit_get_expr(self, expression: expr.Get) -> object:
         objekt: object = self.evaluate(expression.objekt)        
-        if isinstance(objekt, loxinstance.LoxInstance):
+        if isinstance(objekt, loxobjects.LoxInstance):
             return objekt.get(expression.name)
         raise runtimeerror.RuntimeError(expression.name, "Only instances have properties.")
 
