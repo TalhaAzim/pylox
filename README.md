@@ -1,6 +1,12 @@
 # Pylox - A Python Implementation of the Lox Interpreter
 
-A learning project to understand how interpreters work by implementing the Lox programming language from *Crafting Interpreters* by Robert Nystrom, ported 1:1 from Java to Python.
+A learning project to understand how interpreters work by implementing the Lox programming language from *Crafting Interpreters* by Robert Nystrom.
+
+Branches:
+- reference-pylox: A 1:1 port from java to python of the jlox interpreter. As close as 1:1 you can get anyway. Bug fixes and test suite implementation only.
+- reference-clox: (WIP) The clox interpreter as implemented in the book.
+- dev: The current development branch. Main focus right now is refactoring to idiomatic Python and modular structure.
+- main: Just look pretty.
 
 ## About This Project
 
