@@ -8,9 +8,10 @@ ClassType = Enum("ClassType", ["NONE", "CLASS", "SUBCLASS"])
 
 class Resolver(expr.Visitor, stmt.Visitor):
 
-    runtime = None
+    def __init__(self, runtime: 'Pylox') -> None:
+        self.runtime = runtime
 
-    def __init__(self, interpreter: Interpreter) -> None:
+    def __call__(self, interpreter: Interpreter) -> None:
         self.interpreter = interpreter
         self.scopes = []
         self.current_function = FunctionType.NONE
@@ -30,7 +31,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
         self.define(statement.name)
 
         if statement.superclass is not None and statement.name.lexeme == statement.superclass.name.lexeme:
-            Resolver.runtime.error(statement.superclass.name, "A class can't inherit from itself.")
+            self.runtime.error(statement.superclass.name, "A class can't inherit from itself.")
         
         if statement.superclass is not None:
             self.current_class = ClassType.SUBCLASS
@@ -81,11 +82,11 @@ class Resolver(expr.Visitor, stmt.Visitor):
     
     def visit_return_stmt(self, statement: stmt.Return) -> None:
         if self.current_function == FunctionType.NONE:
-            Resolver.runtime.error(statement.keyword, "Can't return from top-level code.")
+            self.runtime.error(statement.keyword, "Can't return from top-level code.")
 
         if not statement.value is None:
             if self.current_function == FunctionType.INITIALIZER:
-                Resolver.runtime.error(statement.keyword, "Can't return a value from an initializer.")
+                self.runtime.error(statement.keyword, "Can't return a value from an initializer.")
             self.resolve(statement.value)
 
         return None
@@ -136,7 +137,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
         
         scope = self.scopes[-1]
         if name.lexeme in scope:
-            Resolver.runtime.error(name, "Already a variable with this name in this scope")
+            self.runtime.error(name, "Already a variable with this name in this scope")
 
         scope[name.lexeme] = False
     
@@ -148,7 +149,7 @@ class Resolver(expr.Visitor, stmt.Visitor):
     
     def visit_variable_expr(self, expression: expr.Variable) -> None:
         if len(self.scopes) > 0 and self.scopes[-1].get(expression.name.lexeme) == False:
-            Resolver.runtime.error(expression.name, "Can't read local variable in it's own initializer.")
+            self.runtime.error(expression.name, "Can't read local variable in it's own initializer.")
         
         self.resolve_local(expression, expression.name)
         return None
@@ -203,16 +204,16 @@ class Resolver(expr.Visitor, stmt.Visitor):
 
     def visit_super_expr(self, expression: expr.Super) -> None:
         if self.current_class == ClassType.NONE:
-            Resolver.runtime.error(expression.keyword, "Can't use 'super' outside of a class.")
+            self.runtime.error(expression.keyword, "Can't use 'super' outside of a class.")
         elif self.current_class != ClassType.SUBCLASS:
-            Resolver.runtime.error(expression.keyword, "Can't use 'super' in a class with no superclass.")
+            self.runtime.error(expression.keyword, "Can't use 'super' in a class with no superclass.")
         
         self.resolve_local(expression, expression.keyword)
         return None
     
     def visit_this_expr(self, expression: expr.This) -> None:
         if self.current_class == ClassType.NONE:
-            Resolver.runtime.error(expression.keyword, "Can't use 'this' outside of a class.")
+            self.runtime.error(expression.keyword, "Can't use 'this' outside of a class.")
             return None
 
         self.resolve_local(expression, expression.keyword)

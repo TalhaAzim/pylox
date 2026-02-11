@@ -9,7 +9,10 @@ class Parser:
     class ParseError(Exception):
         pass
 
-    def __init__(self, tokens: list[Token]) -> None:
+    def __init__(self, runtime: 'Pylox'):
+        self.runtime = runtime
+
+    def __call__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
         self.current = 0
 
@@ -161,7 +164,7 @@ class Parser:
         if not self.check(TokenType.RIGHT_PAREN):
             while True:
                 if len(parameters) >= 255:
-                    Parser.error(self.peek(), "Can't  have more than 255 parameters")
+                    self.error(self.peek(), "Can't  have more than 255 parameters")
                 
                 parameters.append(self.consume(TokenType.IDENTIFIER, "Expect parameter name."))
 
@@ -299,7 +302,7 @@ class Parser:
         if not self.check(TokenType.RIGHT_PAREN):
             while True:
                 if len(arguments) >= 255:
-                    Parser.error(self.peek(), "Can't have more than 255 arguments.")
+                    self.error(self.peek(), "Can't have more than 255 arguments.")
                 arguments.append(self.expression())
                 if not self.match(TokenType.COMMA):
                     break
@@ -353,17 +356,16 @@ class Parser:
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return expr.Grouping(expression)
         
-        raise Parser.error(self.peek(), "Expect expression.")
+        raise self.error(self.peek(), "Expect expression.")
 
     def consume(self, ttype: TokenType, message: str) -> Token:
         if self.check(ttype):
             return self.advance()
         
-        raise Parser.error(self.peek(), message)
+        raise self.error(self.peek(), message)
     
-    @staticmethod
-    def error(token: Token, message: str) -> "Parser.ParseError":
-        Parser.runtime.error(token, message)
+    def error(self, token: Token, message: str) -> "Parser.ParseError":
+        self.runtime.error(token, message)
         return Parser.ParseError()
     
     def synchronize(self) -> None:

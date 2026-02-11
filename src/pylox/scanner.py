@@ -21,13 +21,15 @@ class Scanner:
         "while": TokenType.WHILE
     }
 
-    def __init__(self, source: str, runtime: 'Pylox'):
+    def __init__(self, runtime: 'Pylox') -> None:
+        self.runtime: 'Pylox' = runtime
+    
+    def __call__(self, source: str) -> None:
         self.source = source
         self.tokens: list[Token] = []
         self.start: int = 0
         self.current: int = 0
         self.line: int = 1
-        self.runtime: 'Pylox' = runtime
     
     def scan_tokens(self) -> list:
         while not self.is_at_end():

@@ -2,100 +2,86 @@ import sys
 import runtimeerror
 import stmt
 from tokens import Token, TokenType
+import scanner 
+import parser 
+import resolver 
+import interpreter 
+
 
 class Pylox:
-    from scanner import Scanner
-    from parser import Parser
-    from resolver import Resolver
-    from interpreter import Interpreter
 
-    had_error = False
-    had_runtime_error = False
-    interpreter = None
-
-    def __init__(self) -> None:
-        pass
+    def __init__(self, Scanner, Parser, Resolver, Interpreter) -> None:
+        self.scanner = Scanner(self)
+        self.parser = Parser(self)
+        self.resolver = Resolver(self)
+        self.interpreter = Interpreter(self)
+        self.had_error = False
+        self.had_runtime_error = False
     
-    @staticmethod
-    def main(args: list[str]) -> None:
-        Pylox.Parser.runtime = Pylox
-        Pylox.Resolver.runtime = Pylox
-        Pylox.Interpreter.runtime = Pylox
+    def main(self, args: list[str]) -> None:
 
         if len(args) > 1:
             print("Usage: pylox [script]")
             sys.exit(64)
         elif len(args) == 1:
-            Pylox.run_file(args[0])
+            self.run_file(args[0])
         else:
-            Pylox.run_prompt()
+            self.run_prompt()
 
-    @staticmethod
-    def run_file(path: str) -> None:
+    def run_file(self, path: str) -> None:
         with open(path, "r") as f:
-            Pylox.run(f.read())
+            self.run(f.read())
         
-        if Pylox.had_error:
+        if self.had_error:
             sys.exit(65)
         
-        if Pylox.had_runtime_error:
+        if self.had_runtime_error:
             sys.exit(70)
 
-    @staticmethod
-    def run_prompt() -> None:
+    def run_prompt(self) -> None:
         while True:
             try:
-                Pylox.run(input("pylox> "))
-                Pylox.had_error = False
+                self.run(input("pylox> "))
+                self.had_error = False
             except KeyboardInterrupt:
                 break
 
-    @staticmethod
-    def run(source: str) -> None:
-        # Importing scanner, parser, and interpreter here to avoid circular import
-        # from scanner import Scanner
-        # from parser import Parser
+    def run(self, source: str) -> None:
 
-        scanner: Pylox.Scanner = Pylox.Scanner(source, Pylox)
-        tokens: list[Token] = scanner.scan_tokens()
+        self.scanner(source)
+        tokens: list[Token] = self.scanner.scan_tokens()
 
-        if Pylox.interpreter is None:
-            from interpreter import Interpreter
-            Pylox.interpreter = Interpreter()
+        self.parser(tokens)
+        statements: list[stmt.Stmt] = self.parser.parse()
 
-        parser: Pylox.Parser = Pylox.Parser(tokens)
-        statements: list[stmt.Stmt] = parser.parse()
-
-        if Pylox.had_error:
+        if self.had_error:
             return
         
-        resolver: Pylox.Resolver = Pylox.Resolver(Pylox.interpreter)
-        resolver.resolve(statements)
+        self.interpreter()
+        self.resolver(self.interpreter)
+        self.resolver.resolve(statements)
        
-        if Pylox.had_error:
+        if self.had_error:
             return
         
-        Pylox.interpreter.interpret(statements)
+        self.interpreter.interpret(statements)
 
-    @staticmethod
-    def error(location: int | Token, message: str) -> None:
+    def error(self, location: int | Token, message: str) -> None:
         if isinstance(location, int):
-            Pylox.report(location, "", message)
+            self.report(location, "", message)
         else:
             if location.tokentype == TokenType.EOF:
-                Pylox.report(location.line, " at end", message)
+                self.report(location.line, " at end", message)
             else:
-                Pylox.report(location.line, f" at '{location.lexeme}'", message)
+                self.report(location.line, f" at '{location.lexeme}'", message)
     
-    @staticmethod
-    def runtime_error(error: runtimeerror.RuntimeError) -> None:
+    def runtime_error(self, error: runtimeerror.RuntimeError) -> None:
         print(f"{error.message}\n[line {error.token.line}]")
-        Pylox.had_runtime_error = True
+        self.had_runtime_error = True
 
-    @staticmethod
-    def report(line: int, where: str, message: str) -> None:
+    def report(self, line: int, where: str, message: str) -> None:
         print(f"[line {line}] Error {where}: {message}", file=sys.stderr)
-        Pylox.had_error = True;
+        self.had_error = True;
 
 if __name__ == "__main__":
-    Pylox.main(sys.argv[1:])
+    Pylox(scanner.Scanner, parser.Parser, resolver.Resolver, interpreter.Interpreter).main(sys.argv[1:])

@@ -20,13 +20,13 @@ class Clock(loxobjects.LoxCallable):
 
 class Interpreter(expr.Visitor, stmt.Visitor):
 
-    runtime = None
+    def __init__(self, runtime: 'Pylox'):
+        self.runtime = runtime
 
-    def __init__(self) -> None:
+    def __call__(self) -> None:
         self.globals = Environment()
         self.environment = self.globals
         self.locals = {}
-
         self.globals.define("clock", Clock())
 
     def evaluate(self, expression: expr.Expr) -> object:
@@ -302,4 +302,4 @@ class Interpreter(expr.Visitor, stmt.Visitor):
             for statement in statements:
                 self.execute(statement)
         except RuntimeError as error:
-            Interpreter.runtime.runtime_error(error)
+            self.runtime.runtime_error(error)
