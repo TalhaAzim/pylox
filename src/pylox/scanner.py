@@ -1,9 +1,6 @@
 from tokens import Token, TokenType
-# from __init__ import Pylox
 
 class Scanner:
-
-    runtime = None
 
     keywords = {
         "and": TokenType.AND,
@@ -24,14 +21,15 @@ class Scanner:
         "while": TokenType.WHILE
     }
 
-    def __init__(self, source: str):
+    def __init__(self, source: str, runtime: 'Pylox'):
         self.source = source
         self.tokens: list[Token] = []
         self.start: int = 0
         self.current: int = 0
         self.line: int = 1
+        self.runtime: 'Pylox' = runtime
     
-    def scan_tokens(self) -> None:
+    def scan_tokens(self) -> list:
         while not self.is_at_end():
             self.start = self.current
             self.scan_token()
@@ -74,7 +72,7 @@ class Scanner:
                 elif (c.isalpha() or c == '_'):
                     self.identifier()
                 else:
-                    Scanner.runtime.error(self.line, "Unexpected character.")
+                    self.runtime.error(self.line, "Unexpected character.")
 
     def identifier(self) -> None:
         while True:

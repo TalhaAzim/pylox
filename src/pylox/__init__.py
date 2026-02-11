@@ -18,7 +18,6 @@ class Pylox:
     
     @staticmethod
     def main(args: list[str]) -> None:
-        Pylox.Scanner.runtime = Pylox
         Pylox.Parser.runtime = Pylox
         Pylox.Resolver.runtime = Pylox
         Pylox.Interpreter.runtime = Pylox
@@ -57,7 +56,7 @@ class Pylox:
         # from scanner import Scanner
         # from parser import Parser
 
-        scanner: Pylox.Scanner = Pylox.Scanner(source)
+        scanner: Pylox.Scanner = Pylox.Scanner(source, Pylox)
         tokens: list[Token] = scanner.scan_tokens()
 
         if Pylox.interpreter is None:
