@@ -25,7 +25,7 @@ class GenerateAst():
         with open(path, "w") as f:
             src = '\n'.join([
               "from abc import ABC, abstractmethod",
-              "from token import Token",
+              "from tokens import Token",
               "", 
               f"class {basename}(ABC):",
               "",

@@ -1,7 +1,7 @@
 import sys
 import runtimeerror
 import stmt
-from token import Token, TokenType
+from tokens import Token, TokenType
 
 class Pylox:
     from scanner import Scanner

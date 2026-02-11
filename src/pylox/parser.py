@@ -1,4 +1,4 @@
-from token import TokenType, Token
+from tokens import TokenType, Token
 import expr
 import stmt
 

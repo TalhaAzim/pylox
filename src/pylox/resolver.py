@@ -1,6 +1,6 @@
 import expr, stmt
 from interpreter import Interpreter
-from token import Token
+from tokens import Token
 from enum import Enum
 
 FunctionType = Enum("FunctionType", ["NONE", "FUNCTION", "INITIALIZER", "METHOD"]) 

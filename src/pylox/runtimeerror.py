@@ -1,4 +1,4 @@
-from token import Token
+from tokens import Token
 
 class RuntimeError(RuntimeError):
 

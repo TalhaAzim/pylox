@@ -1,6 +1,6 @@
 import expr
 import stmt
-from token import TokenType, Token
+from tokens import TokenType, Token
 import runtimeerror
 from returnexception import ReturnException
 from environment import Environment

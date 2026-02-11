@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from token import Token
+from tokens import Token
 
 class Stmt(ABC):
 

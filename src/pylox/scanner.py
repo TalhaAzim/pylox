@@ -1,4 +1,4 @@
-from token import Token, TokenType
+from tokens import Token, TokenType
 # from __init__ import Pylox
 
 class Scanner:

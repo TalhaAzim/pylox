@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 
 tokens_desc = """
@@ -25,10 +26,12 @@ TOKENS = [ token.strip() for token in "".join(line for line in tokens_desc.split
 
 TokenType = Enum("TokenType", TOKENS)
 
+@dataclass(frozen=True)
 class Token:
-
-    def __init__(self, ttype: TokenType, lexeme: str, literal: object, line: int):
-        self.tokentype, self.lexeme, self.literal, self.line = ttype, lexeme, literal, line
+    tokentype: TokenType
+    lexeme: str
+    literal: object
+    line: int
 
     def __str__(self) -> str:
         return f"{self.tokentype} {self.lexeme} {self.literal}"
