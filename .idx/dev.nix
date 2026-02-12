@@ -5,6 +5,8 @@
   channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
+    clang
+    clang-tools
     gnumake
     claude-code
     opencode
