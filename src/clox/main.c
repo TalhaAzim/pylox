@@ -17,7 +17,7 @@ static void repl() {
       break;
     }
 
-    interpet(line);
+    interpret(line);
   }
 }
 
