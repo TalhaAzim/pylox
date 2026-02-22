@@ -5,17 +5,13 @@
   channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
-    clang
-    clang-tools
-    gnumake
     claude-code
     opencode
     ripgrep
     fd
-    (python313.withPackages (pypkgs: with pypkgs; [
-      python-lsp-server
-    ]))
-  ];
+    gnumake
+  ] ++ (import ./clox.nix { inherit pkgs; }).packages
+    ++ (import ./pylox.nix { inherit pkgs; }).packages;
   # Sets environment variables in the workspace
   env = {};
   idx = {
