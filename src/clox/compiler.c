@@ -5,6 +5,10 @@
 #include "compiler.h"
 #include "scanner.h"
 
+#ifdef DEBUG_PRINT_CODE
+#include "debug.h"
+#endif
+
 typedef struct {
   Token current;
   Token previous;
@@ -93,7 +97,14 @@ static void emitBytes(uint8_t byte1, uint8_t byte2) {
 
 static void emitReturn() { emitByte(OP_RETURN); }
 
-static void endCompiler() { emitReturn(); }
+static void endCompiler() {
+  emitReturn();
+#ifdef DEBUG_PRINT_CODE
+  if (!parser.hadError) {
+    disassembeChunk(currentChunk(), "code");
+  }
+#endif
+}
 
 static void expression();
 static ParseRule *getRule(TokenType type);
