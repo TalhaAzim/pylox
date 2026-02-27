@@ -1,4 +1,21 @@
 {
     "IDX.aI.enableInlineCompletion": true,
-    "IDX.aI.enableCodebaseIndexing": true
+    "IDX.aI.enableCodebaseIndexing": true,
+
+    // clangd provides C/C++ intellisense (completions, diagnostics, go-to-definition)
+    "clangd.path": "/usr/bin/clangd",
+    "clangd.arguments": [
+        "--background-index",
+        "--clang-tidy"
+    ],
+
+    // Use clang-format for C file formatting
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+        "editor.formatOnSave": true
+    },
+
+    // Disable the built-in C/C++ intellisense if ms-vscode.cpptools is installed,
+    // to avoid conflicts with clangd
+    "C_Cpp.intelliSenseEngine": "disabled"
 }

@@ -3,5 +3,7 @@
   packages = with pkgs; [
     clang
     clang-tools
+    gdb
+    binutils
   ];
 }
