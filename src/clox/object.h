@@ -11,9 +11,6 @@
 #define AS_STRING(value)  ((ObjString*)AS_OBJ(value))
 #define AS_CSTRING(value) (((ObjString*)AS_OBJ(value))->chars)
 
-static inline bool isObjType(Value value, ObjType type) {
-    return IS_OBJ(value) && AS_OBJ(value)->type == type;
-}
 
 typedef enum {
     OBJ_STRING,
@@ -29,4 +26,9 @@ struct ObjString {
     char* chars;
 };
 
+ObjString* copyString(const char* chars, int length);
+
+static inline bool isObjType(Value value, ObjType type) {
+    return IS_OBJ(value) && AS_OBJ(value)->type == type;
+}
 #endif
