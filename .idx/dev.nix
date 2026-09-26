@@ -6,8 +6,6 @@
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
     gnumake
-    claude-code
-    opencode
     ripgrep
     fd
     (python313.withPackages (pypkgs: with pypkgs; [
