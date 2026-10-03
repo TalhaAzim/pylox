@@ -83,7 +83,7 @@ static InterpretResult run() {
       push(BOOL_VAL(true));
       break;
     case OP_FALSE:
-      BOOL_VAL(false);
+      push(BOOL_VAL(false));
       break;
     case OP_EQUAL: {
       Value b = pop();
