@@ -5,11 +5,9 @@
   channel = "unstable"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = with pkgs; [
-    claude-code
-    opencode
+    gnumake
     ripgrep
     fd
-    gnumake
   ] ++ (import ./clox.nix { inherit pkgs; }).packages
     ++ (import ./pylox.nix { inherit pkgs; }).packages;
   # Sets environment variables in the workspace
