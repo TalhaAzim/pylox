@@ -14,6 +14,17 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
     return result;
 }
 
+// REVIEW BUG 1 (the build fails here). freeObjects() calls freeObject(),
+// but freeObject() is only defined further down the file. C reads a file
+// top to bottom, so at the call the compiler has never seen freeObject.
+// C99 guesses an "implicit declaration" for it (non-static, returning int).
+// Then the real definition below says `static void`, which contradicts the
+// guess, and gcc stops:
+//   error: static declaration of 'freeObject' follows non-static declaration
+// How to spot it: "implicit declaration of function" always means "used
+// before it was declared". A static helper has to sit above its callers
+// (the book puts freeObject() first) or be forward-declared near the top:
+//   static void freeObject(Obj* object);
 void freeObjects() {
   Obj *object = vm.objects;
   while (object != NULL) {

@@ -12,6 +12,10 @@
 
 VM vm;
 
+// REVIEW (minor). The book makes this `static`. Without it, resetStack()
+// becomes visible to every other file linked into clox, so a function of
+// the same name elsewhere would clash at link time. Make helpers that only
+// this file uses static by default.
 void resetStack() { vm.stackTop = vm.stack; }
 
 static void runtimeError(const char *format, ...) {
