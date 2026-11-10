@@ -88,7 +88,7 @@ static void skipWhiteSpace() {
         return;
         break;
       }
-      // REVIEW BUG 4. A `break;` is missing right here, after the if/else
+      // REVIEW [B4]. A `break;` is missing right here, after the if/else
       // (the book has one). Switch cases in C fall through unless you
       // break. So after skipping a comment, control falls into
       // `default: return;` below, and skipWhiteSpace() returns while still
@@ -101,6 +101,7 @@ static void skipWhiteSpace() {
       // How to spot it: clang -Wimplicit-fallthrough flags this. gcc's
       // -Wall -Wextra didn't here. Reading a switch, ask of every case:
       // "where does control go when this case ends?"
+      // See [B4] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
     default:
       return;
     }
@@ -125,13 +126,14 @@ static TokenType identifierType() {
     return checkKeyword(1, 4, "lass", TOKEN_CLASS);
   case 'e':
     return checkKeyword(1, 3, "lse", TOKEN_ELSE);
-  // REVIEW (minor, works by luck). This case's `break;` is *inside* the if,
+  // REVIEW [M1] (minor, works by luck). This case's `break;` is *inside* the if,
   // so a one-letter identifier `f` skips it and falls through into
   // case 'i' below. That happens to be harmless, because checkKeyword()
   // sees the length doesn't match "if" and returns TOKEN_IDENTIFIER. But it
   // only works because of what case 'i' does, so it could break if that
   // code changes. The book's `break;` comes after the if's closing brace.
-  // Same warning as bug 4 (clang -Wimplicit-fallthrough).
+  // Same warning as [B4] (clang -Wimplicit-fallthrough).
+  // See [M1] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
   case 'f':
     if (scanner.current - scanner.start > 1) {
       switch (scanner.start[1]) {

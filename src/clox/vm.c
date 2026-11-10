@@ -12,10 +12,11 @@
 
 VM vm;
 
-// REVIEW (minor). The book makes this `static`. Without it, resetStack()
+// REVIEW [M2] (minor). The book makes this `static`. Without it, resetStack()
 // becomes visible to every other file linked into clox, so a function of
 // the same name elsewhere would clash at link time. Make helpers that only
 // this file uses static by default.
+// See [M2] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 void resetStack() { vm.stackTop = vm.stack; }
 
 static void runtimeError(const char *format, ...) {
@@ -120,6 +121,8 @@ static InterpretResult run() {
     case OP_LESS:
       BINARY_OP(BOOL_VAL, <);
       break;
+    // REVIEW [M4] (minor): the lines below in this case are indented
+    // with tabs, while the rest of the file uses spaces.
     case OP_ADD:
       if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
         concatenate();

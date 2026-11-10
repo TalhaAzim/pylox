@@ -79,7 +79,7 @@ static void advance() {
   }
 }
 
-// REVIEW BUG 2. consume() is missing its last line:
+// REVIEW [B2]. consume() is missing its last line:
 //   errorAtCurrent(message);
 // If the expected token is there, it advances, which is fine. If it isn't,
 // the function just returns, and the error is silently dropped. Every syntax
@@ -92,6 +92,7 @@ static void advance() {
 // A parameter that's never used often means a line is missing. Read that
 // warning as a question: why does this function take a message it never
 // prints?
+// See [B2] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 static void consume(TokenType type, const char *message) {
   if (parser.current.type == type) {
     advance();
@@ -213,7 +214,7 @@ static void unary() {
 
   // Compile the operand.
   expression();
-  // REVIEW BUG 3. This should be parsePrecedence(PREC_UNARY), not
+  // REVIEW [B3]. This should be parsePrecedence(PREC_UNARY), not
   // expression(). The book starts with expression() in 17.4 and changes it
   // in 17.6.1 once parsePrecedence() exists; that change was missed.
   // expression() parses at the *lowest* precedence, so the operand swallows
@@ -226,6 +227,7 @@ static void unary() {
   // grouping changes the answer, and work out the result by hand first.
   // (Careful: for booleans, !(a == b) and (!a) == b always agree, so a test
   // like `!true == false` passes either way.)
+  // See [B3] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 
   // Emit the operator instruction.
   switch (operatorType) {

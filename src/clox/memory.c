@@ -14,7 +14,7 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
     return result;
 }
 
-// REVIEW BUG 1 (the build fails here). freeObjects() calls freeObject(),
+// REVIEW [B1] (the build fails here). freeObjects() calls freeObject(),
 // but freeObject() is only defined further down the file. C reads a file
 // top to bottom, so at the call the compiler has never seen freeObject.
 // C99 guesses an "implicit declaration" for it (non-static, returning int).
@@ -25,6 +25,7 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 // before it was declared". A static helper has to sit above its callers
 // (the book puts freeObject() first) or be forward-declared near the top:
 //   static void freeObject(Obj* object);
+// See [B1] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 void freeObjects() {
   Obj *object = vm.objects;
   while (object != NULL) {

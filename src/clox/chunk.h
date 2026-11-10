@@ -2,6 +2,10 @@
 #define clox_chunk_h
 
 #include "common.h"
+// REVIEW [M3] (minor): the book includes memory.h from chunk.c, not
+// here. Include a header where it's used, so every file that includes
+// chunk.h doesn't pick up memory.h (and object.h) too.
+// See [M3] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 #include "memory.h"
 #include "value.h"
 

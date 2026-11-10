@@ -14,6 +14,9 @@ $(CLOX_BIN): $(CLOX_OBJ)
 	@mkdir -p build
 	$(CC) $(CFLAGS) -o $@ $^
 
+# REVIEW [T1]: this rule only depends on the .c file, so editing a header
+# (e.g. DEBUG flags in common.h) doesn't rebuild anything until you run
+# `make clean`. See [T1] in CLOX_REVIEW.md and CLOX_WALKTHROUGH.md.
 src/clox/%.o: src/clox/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
